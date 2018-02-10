@@ -2,7 +2,7 @@
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
-Date:
+Date: 2/10/2017
 Exercise 1.3
 
 Remark:
@@ -13,10 +13,10 @@ from Implementations.Implementation import *
 
 '''===================================================================================================
 Main program:
-Write comments
+Demo Exercise 1.3.1 - 1.3.8 in a row
 
 Implementations:
-Write comments
+See folder 1.3_Solution\Implementations
 ==================================================================================================='''
 
 def main():

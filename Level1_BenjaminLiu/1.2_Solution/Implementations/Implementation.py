@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*- 
 '''
 Student name: Beier (Benjamin) Liu
-Date:
-Exercise 1.2.1
+Date: 2/10/2017
+Exercise 1.2
 '''
 import copy
 import time
@@ -11,8 +11,9 @@ from faker import Faker
 import numpy as np
 
 '''===================================================================================================
-Main program:
-Write comments
+File content:
+Implementations for Exercise 1.2
+Implementations for 1.2_Main.py
 ==================================================================================================='''
 
 # Exercise 1.2.1 implementation

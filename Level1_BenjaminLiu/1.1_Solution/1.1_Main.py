@@ -2,10 +2,12 @@
 # -*- coding: utf-8 -*- 
 '''
 Student name: Beier (Benjamin) Liu
-Date:
-Exercise 1.1.1 - 1.1.8
+Date: 2/10/2017
+Exercise 1.1
+
+Remark: 
+Python 2.7 is recommended
 '''
-# encoding: utf-8
 
 '''===================================================================================================
 Main program:

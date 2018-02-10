@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*- 
 '''
 Student name: Beier (Benjamin) Liu
-Date:
-Exercise 1.2.1
+Date: 2/10/2017
+Exercise 1.2
 
 Remark: 
 Python 2.7 is recommended
@@ -14,7 +14,7 @@ from Implementations.Implementation import *
 
 '''===================================================================================================
 Main program:
-Write comments
+Demo Exercise 1.2.1 - 1.2.11 in a row
 
 Implementations:
 See folder 1.2_Solution\Implementations

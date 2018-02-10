@@ -3,8 +3,8 @@ Benjamin's Python programming template file
 You can ignore this file
 ==================================================================================================='''
 
-#!/usr/bin/env python
 # -*- coding: utf-8 -*- 
+#!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
 Date:

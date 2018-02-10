@@ -3,8 +3,8 @@
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
-Date:
-Exercise xxx:
+Date: 2/10/2017
+Exercise 1.3
 
 Remark:
 Python 2.7 is recommended
@@ -12,11 +12,9 @@ Python 2.7 is recommended
 import copy
 
 '''===================================================================================================
-Main program:
-Write comments
-
-Implementations:
-Write comments
+File contents:
+Implementations for Exercise 1.3
+Implementations for 1.3_Main.py
 ==================================================================================================='''
 
 # Exercise 1.3.1 implementation
