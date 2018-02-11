@@ -19,7 +19,7 @@ Implementations for Exercise 1.4
 Implementations for 1.4_Main.py
 ==================================================================================================='''
 
-# Exercise 1.4.1 
+# Exercise 1.4.1 implementation
 # You are a lender, holding onto a large number of mortgages. Create code that does the following:
 # a. A function that returns an unsorted list of mortgage amounts, in thousands. Numbers should range from 100 to 1,000 and do not need to all be unique
 # b. Filter the result of a) into three lists: Amounts below 200, amounts between 200 and 467, and amounts greater than 467. Call these ‘miniMortgages’, 

@@ -1,14 +1,9 @@
-'''===================================================================================================
-Benjamin's Python programming template file
-You can ignore this file
-==================================================================================================='''
-
 # -*- coding: utf-8 -*- 
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
 Date:
-Exercise xxx:
+Exercise 2.2
 
 Remark:
 Python 2.7 is recommended
@@ -17,27 +12,13 @@ Using cmd line py -2.7 -m install [package_name]
 '''
 
 '''===================================================================================================
-Main program:
-Write comments
-
-Implementations:
-Write comments
-
 File content:
-Write comments
+As shown in the lecture, create derived classes as follows:
+a. A FixedRateLoan class which derives from Loan.
+b. A VariableRateLoan class which derives from Loan. This should have its own __init__ function 
+that sets a _rateDict attribute on the object and then invokes the super-class’ __init__ function
+Override the base-class rate function as follows:
 ==================================================================================================='''
-
-def main():
-	# Exercise xyz
-	# Write comments
-	print('\n====================================Exercise xyz=====================================\n');
-	print('Running my myFunction function ... \n');
-	myFunction();
-	raw_input('Program pause. Press enter to continue.\n');
-
-if __name__=='__main__':
-	main()
-
 
 class Asset(object):
 	# Class init
@@ -67,3 +48,15 @@ class Asset(object):
 	# Object-level method
 	def funct():
 		pass
+
+
+def main():
+	# Exercise xyz
+	# Write comments
+	print('\n====================================Exercise xyz=====================================\n');
+	print('Running my myFunction function ... \n');
+	myFunction();
+	raw_input('Program pause. Press enter to continue.\n');
+
+if __name__=='__main__':
+	main()

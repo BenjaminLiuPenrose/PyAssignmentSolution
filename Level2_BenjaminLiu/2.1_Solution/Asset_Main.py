@@ -1,14 +1,9 @@
-'''===================================================================================================
-Benjamin's Python programming template file
-You can ignore this file
-==================================================================================================='''
-
 # -*- coding: utf-8 -*- 
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
 Date:
-Exercise xxx:
+Exercise 2.1.6
 
 Remark:
 Python 2.7 is recommended
@@ -22,10 +17,8 @@ Write comments
 
 Implementations:
 Write comments
-
-File content:
-Write comments
 ==================================================================================================='''
+
 
 def main():
 	# Exercise xyz
@@ -37,33 +30,3 @@ def main():
 
 if __name__=='__main__':
 	main()
-
-
-class Asset(object):
-	# Class init
-	# Object init
-	def __ini__(self):
-		pass
-
-	# Getter and setter
-	@property
-	def get(self):
-		pass
-
-	@get.setter
-	def set(self, i):
-		pass
-
-	# Static method
-	@staticmethod
-	def myFunc():
-		pass
-
-	# Class method
-	@classmethod
-	def myFunct(cls):
-		pass
-
-	# Object-level method
-	def funct():
-		pass
