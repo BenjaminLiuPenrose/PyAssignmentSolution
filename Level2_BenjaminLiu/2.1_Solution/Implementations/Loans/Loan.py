@@ -2,14 +2,15 @@
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
-Date:
-Exercise 1.2.2 - 1.2.4
+Date: 2/14/2018
+Exercise 1.2.2 - 1.2.5
 
 Remark:
 Python 2.7 is recommended
 Before running please install packages
 Using cmd line py -2.7 -m install [package_name]
 '''
+import logging
 
 '''===================================================================================================
 File content:
@@ -19,18 +20,18 @@ File content:
 # a. The monthly payment amount of the Loan (monthlyPayment). Even though monthlyPayment is likely to be equal for 
 # all months, you should still define this with a dummy ‘period’ parameter, since it’s possible some loan types will 
 # have a monthly payment dependent on the period.
-# b. The total payments of the Loan (totalPayments). This is principal plus interest.
+# b. The total payments of the Loan (totalPayments). This is face plus interest.
 # c. The total interest of the Loan (totalInterest).
 
 # Exercise 2.1.3
-# Interest due at time T on a loan depends on the outstanding balance. Principal due is the monthly payment 
-# less the interest due. Conceptually, these are recursive calculations as one can determine the interest/principal 
+# Interest due at time T on a loan depends on the outstanding balance. face due is the monthly payment 
+# less the interest due. Conceptually, these are recursive calculations as one can determine the interest/face 
 # due at time T if one knows the balance at time T-1 (which, in turn, can be determined if one knows the balance 
 # at time T-2).
 # For each of the below functions, implement two versions: A recursive version (per the above statement) and a 
 # version that uses the formulas provided in the slides:
 # a. The interest amount due at a given period (interestDue).
-# b. The principal amount due at a given period (principalDue).
+# b. The face amount due at a given period (faceDue).
 # c. The balance of the loan at a given period (balance).
 # Use your Timer class to time each version of each function; what do you observe? What happens as the time period increases?
 
@@ -56,91 +57,103 @@ File content:
 ==================================================================================================='''
 
 # Create a basic Loan class
-# Input principal is face value
-# convRate is the proper interest rate, such as monthly interest rate calculated from APR
-# numPeriods is the term of the loan, for example 6 months loan the number is 6
+# Input face is face value
+# rate is the proper interest rate, such as monthly interest rate calculated from APR
+# term is the term of the loan, for example 6 months loan the number is 6
 class Loan(object):
-	def __init__(self, principal, convRate, numPeriods):
-		self._principal=principal;
-		self._convRate=convRate; # converted proper interest rates, such as the monthly interest rate from APR
-		self._numPeriods=numPeriods;
+	def __init__(self, asset, face, rate, term):
+		if isinstance(asset, Asset):
+			self._asset=asset;
+		else :
+			logging.error('The entered asset is not of type Asset. \n');
+		self._face=face;
+		self._rate=rate/12; # _rate is the monthly interest rate, _term is the  number of months
+		self._term=term;
 
 	# Exercise 2.1.2 implementation
-	# Getter and setter for attributes _principal, _convRate, _numPeriods
+	# Getter and setter for attributes _face, _rate, _term
 	@property
-	def principal(self):
-		return float(self._principal);
+	def face(self):
+		return float(self._face);
 
-	@principal.setter
-	def principal(self, iPrincipal):
-		self._principal=iPrincipal;
-
-	@property
-	def convRate(self):
-		return float(self._convRate);
-
-	@convRate.setter
-	def convRate(self, iConvRate):
-		self._convRate=iConvRate;
+	@face.setter
+	def face(self, iface):
+		self._face=iface;
 
 	@property
-	def numPeriods(self):
-		return float(self._numPeriods);
+	def rate(self):
+		return float(self._rate);
 
-	@numPeriods.setter
-	def numPeriods(self, iNumPeriods):
-		self._numPeriods=iNumPeriods;
+	@rate.setter
+	def rate(self, irate):
+		self._rate=irate;
+
+	@property
+	def term(self):
+		return float(self._term);
+
+	@term.setter
+	def term(self, iterm):
+		self._term=iterm;
+
+	@property
+	def asset(self):
+		return self._asset
+
+	@asset.setter
+	def asset(self, iasset):
+		self._asset=iasset
 
 	# a) Add a method to compute monthly payment
 	# Rmk: The basic equation: A = (P*i)/1-(1+i)^-n
 	def monthlyPayment(self, period): #period is dummy variable
-		pmt=float((self._principal*self._convRate))/(1-(1+self._convRate)**(-self._numPeriods));
+		pmt=float((self._face*self._rate))/(1-(1+self._rate)**(-self._term));
 		return pmt 
 
 	# b) Add a method to compute total payment
-	# Rmk: The total payments of the Loan (totalPayments). This is principal plus interest
+	# Rmk: The total payments of the Loan (totalPayments). This is face plus interest
 	def totalPayments(self, period):
 		pmt=self.monthlyPayment(period);
-		pmtTtl=pmt*self._numPeriods;
+		pmtTtl=pmt*self._term;
 		return pmtTtl
 
 	# c) Add a method to compute total interest
 	# Rmk: The total interest of the Loan (totalInterest) 
 	def totalInterest(self):
-		instTtl=self._principal*self._convRate*self._numPeriods;
+		instTtl=float(self._face*self._rate*self._term);
 		return instTtl
 
 	# Exercise 2.1.3 implementation
 	# Formulas calculations version implementation of the following three methods
 	# a) The interest amount due at a given period (interestDue)
-	# b) The principal amount due at a given period (principalDue)
+	# b) The face amount due at a given period (faceDue)
 	# c) The balance of the loan at a given period (balance)
 	def interestDueFoml(self, period):
-		instDue=self.balanceFoml(period-1)*self._convRate;
+		instDue=self.balanceFoml(period-1)*self._rate;
 		return instDue 
 
 	def principalDueFoml(self, period):
-		principalDue=self.balanceFoml(period-1)-self.balanceFoml(period);
-		return principalDue
+		faceDue=self.balanceFoml(period-1)-self.balanceFoml(period);
+		return faceDue
 
 	def balanceFoml(self, period):
-		balance=self._principal*((1+self._convRate)**period)- \
-		self.monthlyPayment(period)*((1+self._convRate)**period-1)/self._convRate
+		balance=self._face*((1+self._rate)**period)- \
+		self.monthlyPayment(period)*((1+self._rate)**period-1)/self._rate
 		return balance 
 
 	# Recursive version implementation of the following three methods
 	# a) The interest amount due at a given period (interestDue)
-	# b) The principal amount due at a given period (principalDue)
+	# b) The face amount due at a given period (faceDue)
 	# c) The balance of the loan at a given period (balance)
 	def interestDueRecur(self, period):
-		return self.balanceRecur(period-1)*self._convRate
+		return self.balanceRecur(period-1)*self._rate
 
 	def principalDueRecur(self, period):
 		return self.monthlyPayment(period)-self.interestDueRecur(period)
 
 	def balanceRecur(self, period):
 		if period==0:
-			return self._principal
+			return self._face
 		else :
 			return self.balanceRecur(period-1)-self.principalDueRecur(period)
 
@@ -149,18 +162,20 @@ class Loan(object):
 	# payment based on three parameters: face, rate, and term
 	@classmethod
 	def calcMonthlyPmt(cls, face, rate, term):
+		rate=rate/12.0;
 		return float((face*rate))/(1-(1+rate)**(-term));
 
 	# b) Create a class-level function, in the Loan base class, which calculates the balance (calcBalance). Input 
 	# parameters should be face, rate, term, period
 	@classmethod
 	def calcBalance(cls, face, rate, term, period):
+		rate=rate/12.0;
 		return face*((1+rate)**period)- \
 		cls.calcMonthlyPmt(face, rate, term)*((1+rate)**period-1)/rate;
 
 	# d) Modify the object-level methods for monthlyPayment and balance to delegate to the class-level methods
 	def monthlyPayment2(self, period): #period is dummy variable 
-		pmt=self.calcMonthlyPmt(self._principal, self._convRate, self._numPeriods);
+		pmt=self.calcMonthlyPmt(self._face, self._rate, self._term);
 		return pmt 
 
 	# Exercise 2.1.5 implementation
@@ -175,39 +190,55 @@ class Loan(object):
 	def annualRate(monthlyRte):
 		return float(monthlyRte)*12
 
+	def recoveryValue(self, period):
+		recoveryMult=0.60;
+		return self._asset.getPresValue(period)*recoveryMult
+
 	# d) Modify all the Loan methods that rely on the rate to utilize the static-level rate functions
 	# Create a new class Loan2 to implement this idea
 class Loan2(object):
 	# Initialization
-	def __init__(self, principal, convRate, numPeriods):
-		self._principal=principal;
-		self._convRate=convRate; # converted proper interest rates, such as the monthly interest rate from APR
-		self._numPeriods=numPeriods;
+	def __init__(self, asset, face, rate, term):
+		if isinstance(asset, Asset):
+			self._asset=asset;
+		else :
+			logging.error('The input asset is not of type Asset. \n');
+		self._face=face;
+		self._rate=monthlyRate(rate); # _rate is the monthly interest rate, _term is the  number of months
+		self._term=term;
 
 	# Getter and setter
 	@property
-	def principal(self):
-		return float(self._principal);
+	def face(self):
+		return float(self._face);
 
-	@principal.setter
-	def principal(self, iPrincipal):
-		self._principal=iPrincipal;
-
-	@property
-	def convRate(self):
-		return float(self._convRate);
-
-	@convRate.setter
-	def convRate(self, iConvRate):
-		self._convRate=iConvRate;
+	@face.setter
+	def face(self, iface):
+		self._face=iface;
 
 	@property
-	def numPeriods(self):
-		return float(self._numPeriods);
+	def rate(self):
+		return float(self._rate);
 
-	@numPeriods.setter
-	def set(self, iNumPeriods):
-		self._numPeriods=iNumPeriods;
+	@rate.setter
+	def rate(self, irate):
+		self._rate=irate;
+
+	@property
+	def term(self):
+		return float(self._term);
+
+	@term.setter
+	def set(self, iterm):
+		self._term=iterm;
+
+	@property
+	def asset(self):
+		return self._asset
+
+	@asset.setter
+	def asset(self, iasset):
+		self._asset=iasset
 
 	# Static methods
 	@staticmethod
@@ -221,62 +252,63 @@ class Loan2(object):
 	# Class methods
 	@classmethod
 	def calcMonthlyPmt(cls, face, rate, term):
+		rate=monthlyRate(rate)
 		return float((face*rate))/(1-(1+rate)**(-term));
 
 	@classmethod
 	def calcBalance(cls, face, rate, term, period):
+		rate=monthlyRate(rate)
 		return face*((1+rate)**period)- \
 		cls.calcMonthlyPmt(face, rate, term)*((1+rate)**period-1)/rate;
 
 	# Object-level methods
 	def monthlyPayment(self, period): #period is dummy variable
-		rate=Loan.monthlyRate(self._convRate*12);
-		pmt=float((self._principal*rate))/(1-(1+rate)**(-self._numPeriods));
+		pmt=float((self._face*self._rate))/(1-(1+self._rate)**(-self._term));
 		return pmt 
 
 	def totalPayments(self, period): #this method no rate is involved
 		pmt=self.monthlyPayment(period);
-		pmtTtl=pmt*self._numPeriods;
+		pmtTtl=pmt*self._term;
 		return pmtTtl
 
 	def totalInterest(self):
-		rate=Loan.monthlyRate(self._convRate*12);
-		instTtl=self._principal*rate*self._numPeriods;
+		instTtl=self._face*self._rate*self._term;
 		return instTtl
 
 	def interestDueFoml(self, period):
-		rate=Loan.monthlyRate(self._convRate*12);
-		instDue=self.balanceFoml(period-1)*rate;
+		instDue=self.balanceFoml(period-1)*self._rate;
 		return instDue 
 
 	def principalDueFoml(self, period): #this method no rate is involved
-		principalDue=self.balanceFoml(period-1)-self.balanceFoml(period);
-		return principalDue
+		faceDue=self.balanceFoml(period-1)-self.balanceFoml(period);
+		return faceDue
 
 	def balanceFoml(self, period): 
-		rate=Loan.monthlyRate(self._convRate*12);
-		balance=self._principal*((1+rate)**period)- \
-		self.monthlyPayment(period)*((1+rate)**period-1)/rate
+		balance=self._face*((1+self._rate)**period)- \
+		self.monthlyPayment(period)*((1+self._rate)**period-1)/self._rate
 		return balance 
 
 	def interestDueRecur(self, period): 
-		rate=Loan.monthlyRate(self._convRate*12);
-		return self.balanceRecur(period-1)*rate
+		return self.balanceRecur(period-1)*self._rate
 
 	def principalDueRecur(self, period): #this method no rate is involved
 		return self.monthlyPayment(period)-self.interestDueRecur(period)
 
 	def balanceRecur(self, period): #this method no rate is involved
 		if period==0:
-			return self._principal
+			return self._face
 		else :
-			return self.balanceRecur(period-1)-self.principalDueRecur(period)
+			return self.balanceRecur(period-1)-self.faceDueRecur(period)
 
 	def monthlyPayment2(self, period): #period is dummy variable 
-		rate=Loan.monthlyRate(self._convRate*12);
-		pmt=self.calcMonthlyPmt(self._principal, rate, self._numPeriods);
+		pmt=self.calcMonthlyPmt(self._face, self._rate, self._term);
 		return pmt 
 
+	def recoveryValue(self, period):
+		recoveryMult=0.60;
+		return self._asset.getPresValue(period)*recoveryMult
 
+	def equity(self, period):
+		return self._asset.getPresValue(period)-balanceRecur(period) 
 
 

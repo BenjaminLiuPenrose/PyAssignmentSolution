@@ -2,15 +2,15 @@
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
-Date:
-Exercise xxx:
+Date: 2/14/2018
+Exercise 2.1.2 - 2.1.5
 
 Remark:
 Python 2.7 is recommended
 Before running please install packages
 Using cmd line py -2.7 -m install [package_name]
 '''
-from Implementations.Loan import *
+from Implementations.Loans.Loan import *
 from Implementations.Timer import *
 
 '''===================================================================================================
@@ -57,13 +57,13 @@ Main program:
 # e. What are the benefits of static-level methods? When are they useful?
 
 Implementations:
-See file 2.1_Solution\Implementations\Loan.py
+See file 2.1_Solution\Implementations\Loans\Loan.py
 ==================================================================================================='''
 
 def main():
 	# Exercise 2.1.2
 	# Create a loan for the whole demo with face=1000000, APR=.035 and term=360 months
-	loan=Loan(1000000, 0.035/12, 360);
+	loan=Loan(None, face=1000000, rate=0.035, term=360);
 
 	# a) Use a method to compute monthly payment
 	print('\n====================================Exercise 2.1.2=====================================\n');
@@ -132,14 +132,14 @@ def main():
 	# a) Implement a class-level method called calcMonthlyPmt, in the Loan base class. This should calculate a monthly 
 	# payment based on three parameters: face, rate, and term
 	print('Step a: Running my calcMonthlyPmt class method ... \n');
-	pmt=Loan.calcMonthlyPmt(face=1000000, rate=0.035/12, term=360);
+	pmt=Loan.calcMonthlyPmt(face=1000000, rate=0.035, term=360);
 	print('The monthly payment is {}. \n'.format(round(pmt, 2)));
 	raw_input('Program pause. Press enter to continue.\n');
 
 	# b) Create a class-level function, in the Loan base class, which calculates the balance (calcBalance). Input 
 	# parameters should be face, rate, term, period
 	print('Step b: Running my calcBalance class method ... \n');
-	balance=Loan.calcBalance(face=1000000, rate=0.035/12, term=360, period=24);
+	balance=Loan.calcBalance(face=1000000, rate=0.035, term=360, period=24);
 	print('The balance is {}. \n'.format(round(balance, 2)));
 	raw_input('Program pause. Press enter to continue.\n');
 
@@ -184,10 +184,10 @@ def main():
 
 	# d) Modify all the Loan methods that rely on the rate to utilize the static-level rate functions
 	# Create a new class Loan2 to modify all the Loan2 methdos that rely on rate with help of static rate functions
-	loan2=Loan2(1000000, 0.035/12, 360);
+	loan2=Loan2(None, 1000000, 0.035, 360);
 	print('The monthly payment is '+str(loan2.monthlyPayment(period=24))+'\n');
 	print('The total payment is '+str(loan2.totalPayments(period=24))+'\n');
-	print('The total interest is 'str(loan2.totalInterest())+'\n');
+	print('The total interest is '+str(loan2.totalInterest())+'\n');
 	print('The interest due for period 24 is '+str(loan2.interestDueFoml(period=24))+'\n');
 	print('The principal due for period 24 is '+str(loan2.principalDueFoml(period=24))+'\n');
 	print('The balance for period is '+str(loan2.balanceFoml(period=24))+'\n');
