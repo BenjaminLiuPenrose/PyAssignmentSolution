@@ -7,11 +7,10 @@ Exercise 1.2.2 - 1.2.5
 
 Remark:
 Python 2.7 is recommended
-Before running please install packages *logging
-Using cmd line py -2.7 -m install [package_name]
 '''
 from Implementations.Assets.Asset import *
 import logging
+logging.getLogger().setLevel(logging.DEBUG)
 
 '''===================================================================================================
 File content:
@@ -199,7 +198,7 @@ class Loan(object):
 		return self._asset.getPresValue(period)*recoveryMult
 
 	def equity(self, period):
-		return self._asset.getPresValue(period)-balanceRecur(period) 
+		return self._asset.getPresValue(period)-self.balanceRecur(period) 
 
 
 	# d) Modify all the Loan methods that rely on the rate to utilize the static-level rate functions
@@ -212,7 +211,10 @@ class Loan2(object):
 		else :
 			logging.error('The input asset is not of type Asset. \n');
 		self._face=face;
-		self._rate=monthlyRate(rate); # _rate is the monthly interest rate, _term is the  number of months
+		if isinstance(rate, (int, float)) :
+			self._rate=Loan2.monthlyRate(rate);
+		else :
+			self._rate=0.05; # _rate is the monthly interest rate, _term is the  number of months # _rate is the monthly interest rate, _term is the  number of months
 		self._term=term;
 
 	# Getter and setter
@@ -306,7 +308,7 @@ class Loan2(object):
 		if period==0:
 			return self._face
 		else :
-			return self.balanceRecur(period-1)-self.faceDueRecur(period)
+			return self.balanceRecur(period-1)-self.principalDueRecur(period)
 
 	def monthlyPayment2(self, period): #period is dummy variable 
 		pmt=self.calcMonthlyPmt(self._face, self._rate, self._term);
@@ -317,6 +319,6 @@ class Loan2(object):
 		return self._asset.getPresValue(period)*recoveryMult
 
 	def equity(self, period):
-		return self._asset.getPresValue(period)-balanceRecur(period) 
+		return self._asset.getPresValue(period)-self.balanceRecur(period) 
 
 

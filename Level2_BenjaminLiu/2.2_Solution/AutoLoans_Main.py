@@ -2,7 +2,7 @@
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
-Date:
+Date: 2/14/201
 Exercise 2.2.4
 
 Remark:
@@ -19,7 +19,7 @@ Main program:
 # Create a fixed AutoLoan class. This should derive-from the appropriate base class(es)
 
 Implementations:
-Write comments
+See file 2.2_Solution\Implementations\Loans\AutoLoans.py
 ==================================================================================================='''
 
 def main():
@@ -28,7 +28,7 @@ def main():
 	print('Creating my fixed AutoLoan object function ... \n');
 	civic_car=Civic(initValue=100000, yearlyDepre=0.20);
 	autoloan=AutoLoan(auto=civic_car, face=1000000, rate= 0.06, term=12);
-	raw_input('Program pause. Press enter to continue.\n');
+	raw_input('The demo successfully finished. Press press any key to exit.\n\n');
 
 if __name__=='__main__':
 	main()

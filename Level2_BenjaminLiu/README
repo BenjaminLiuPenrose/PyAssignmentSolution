@@ -1,18 +1,39 @@
-This is my solution to Exercise 1
+This is my solution to Exercise 2
 
 This can be found at https://github.com/BenjaminLiuPenrose/PyAssignmentSolution
 
-First, go to 1.1_Solution, run 1.1_Main.py in shell, follow the instrcutions in shell step by step
-implementation code for this part can be found at the latter part of the code line
+First, go to 2.1_Solution, 
+For Exercise 2.1.1, run Timer_Main.py in shell, follow the instrcutions in shell step by step
+implementation code for this part can be found at 2.2_Solution\Implementations\Timer.py
 
-Second, go to 1.2_Solution, run 1.2_Main.py in shell, follow the instrcutions in shell step by step
-implementation code for this part can be found at 1.2_Solution\Implementations\Implementation.py
+For Exercise 2.1.2 to , run Loan_Main.py in shell, follow the instrcutions step by step
+implementation code for this part can be found at 2.2_Solution\Implementations\Loans\Loan.py
 
-Third, go to 1.3_Solution, run 1.3_Main.py in shell, follow the instrcutions in shell step by step
-implementation code for this part can be found at 1.2_Solution\Implementations\Implementation.py
+For Exercise 2.1. , run Asset_Main.py in shell, follow the instrcutions step by step
+implementation code for this part can be found at 2.2_Solution\Implementations\Assets\Asset.py
 
-Fourth, go to 1.4_Solution, run 1.4_Main.py in shell, follow the instrcutions in shell step by step
-implementation code for this part can be found at 1.2_Solution\Implementations\Implementation.py
+
+
+Second, go to 2.2_Solution, 
+For Exercise 2.2.1, run Loans_Main.py in shell, follow the instrcutions in shell step by step
+implementation code for this part can be found at 2.2_Solution\Implementations\Loans\Loans.py
+
+For Exercise 2.2.2 and 2.2.3, run Mortgages_Main.py in shell, follow the instructions in shell step by step
+implementation code for this part can be found at 2.2_Solution\Implementations\Loans\Mortgages.py
+
+For Exercise 2.2.4, run AutoLoans_Main.py in shell, follow the instructions in shell step by step
+implementation code for this part can be found at 2.2_Solution\Implementations\Loans\AutoLoans.py
+
+For Exercise 2.2.5, run LoanPool_Main.py in shell, follow the instructions in shell step by step
+implementation code for this part can be found at 2.2_Solution\Implementations\Loans\LoanPool.py
+
+For Exercise 2.2.6, 
+implementation code for this part can be found at 2.2_Solution\Implementations\Assets\Asset.py
+
+For Exercise 2.2.7, run 2.2.7_Loan_Main.py in shell, follow the instructions in shell step by step
+implementation code for this part can be found at 2.2_Solution\Implementations\Loans\Loan.py
+
+
 
 Debug suggested view can be found at Level1_BenjaminLiu\RecView.png
 

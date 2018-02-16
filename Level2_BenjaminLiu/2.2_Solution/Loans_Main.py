@@ -2,13 +2,11 @@
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
-Date:
-Exercise xxx:
+Date: 2/14/2018
+Exercise 2.2.1
 
 Remark:
 Python 2.7 is recommended
-Before running please install packages
-Using cmd line py -2.7 -m install [package_name]
 '''
 from Implementations.Loans.Loans import *
 from Implementations.Assets.Asset import *
@@ -25,7 +23,7 @@ Exercise 2.2.1
 # period. Note that the monthly payment and balance formulas are different in this Variable case
 
 Implementations:
-Write comments
+See file 2.2_Solution\Implementations\Loans\Loans.py
 ==================================================================================================='''
 
 def main():
@@ -36,7 +34,7 @@ def main():
 	home=PrimaryHome(1000000);
 	fixedLoan=FixedRateLoan(asset=home, face=1000000, rate=0.05, term=6);
 	variableLoan=VariableRateLoan(asset=home, face=1000000, rateDict={1:0.05,2:0.06,3:0.08,4:0.12,5:0.08,6:0.05}, term=6);
-	raw_input('Program pause. Press enter to continue.\n');
+	raw_input('The demo successfully finished. Press press any key to exit.\n\n');
 
 if __name__=='__main__':
 	main()

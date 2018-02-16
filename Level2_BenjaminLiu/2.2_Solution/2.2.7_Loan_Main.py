@@ -2,8 +2,8 @@
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
-Date:
-Exercise 2.2.1
+Date: 2/14/2018
+Exercise 2.2.7
 
 Remark:
 Python 2.7 is recommended
@@ -11,19 +11,13 @@ Before running please install packages
 Using cmd line py -2.7 -m install [package_name]
 '''
 from Implementations.Loans.Loan import *
+from Implementations.Loans.Mortgages import *
+from Implementations.Loans.AutoLoans import *
+from Implementations.Timer import *
 
 '''===================================================================================================
-File content:
-Exercise 2.2.1
-# As shown in the lecture, create derived classes as follows:
-# a. A FixedRateLoan class which derives from Loan.
-# b. A VariableRateLoan class which derives from Loan. This should have its own __init__ function that 
-# sets a _rateDict attribute on the object and then invokes the super-class’ __init__ function. Override 
-# the base-class rate function as follows:
-# Modify the Loan class functions to use the rate (or getRate) function to get the rate for the current 
-# period. Note that the monthly payment and balance formulas are different in this Variable case
-
-Exercise 2.2.7
+Main program:
+# Exercise 2.2.7
 # Now that we have our Loan and Asset classes, let’s incorporate the asset into the loan. As a loan 
 # is ‘on an’ asset, which is similar to ‘has a’, we use composition instead of derivation. To this end:
 # a. Add an asset parameter to the base loan __init__ function, which saves it down into an object-level 
@@ -37,19 +31,28 @@ Exercise 2.2.7
 # d. Create a method called recoveryValue in the Loan base class. This method should return the current 
 # asset value for the given period, times a recovery multiplier of 0.6.
 # e. Create a method called equity in the Loan base class. This should return the available equity 
-# (the asset value less the loan balance).
+# (the asset value less the loan balance)
+
 # f. In main, instantiate different Loan types with different assets and test the new functionality
+
+Implementations:
+See file 2.2_Solution\Implementations\Loans\Loan.py
 ==================================================================================================='''
 
-# Exercise 2.2.1
-class FixedRateLoan(Loan):
-	def rate(self, period):
-		return self._rate
+def main():
+	# f) In main, instantiate different Loan types with different assets and test the new functionality
+	print('======================================Exercise 2.2.7=====================================')
+	print('Running my recoveryValue and equity function ... \n');
+	home=PrimaryHome(initValue=1000000, yearlyDepre=0.20);
+	# varMortgage=VariableMortgage(home, 1000000, {1:0.05,2:0.06,3:0.08,4:0.12,5:0.08,6:0.05}, 6);
+	fixMortgage=FixedMortgage(home=home, face=1000000, rate=0.05, term=6);
+	civic_car=Civic(initValue=100000, yearlyDepre=0.20);
+	autoloan=AutoLoan(auto=civic_car, face=1000000, rate= 0.06, term=12);
+	# print(varMortgage.recoveryValue(3), varMortgage.equity(3));
+	print(fixMortgage.recoveryValue(3), fixMortgage.equity(3));
+	print(autoloan.recoveryValue(3), autoloan.equity(3));
+	raw_input('The demo successfully finished. Press press any key to exit.\n');
 
-class VariableRateLoan(Loan):
-	def __init__(self, asset, face, rateDict, term):
-		self._rateDict=rateDict;
-		super(VariableRateLoan, self).__init__(asset, face, None, term)
 
-	def rate(self, period):
-		return self._rateDict.get(period)
+if __name__=='__main__':
+	main()

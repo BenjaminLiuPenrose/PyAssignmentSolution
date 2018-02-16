@@ -7,8 +7,6 @@ Exercise 2.1.2 - 2.1.5
 
 Remark:
 Python 2.7 is recommended
-Before running please install packages
-Using cmd line py -2.7 -m install [package_name]
 '''
 from Implementations.Loans.Loan import *
 from Implementations.Timer import *
@@ -113,7 +111,7 @@ def main():
 	raw_input('Program pause. Press enter to continue.\n');
 
 	print('Part 3: Comparing two costs of approachs to Implementations of method balance ... \n');
-	t_1=Time(); t_2=Timer();
+	t_1=Timer(); t_2=Timer();
 	for perid in range(360+1):
 		t_1.start(); balance=loan.balanceFoml(period=perid); t_1.end();
 		t_2.start(); balance=loan.balanceRecur(period=perid); t_2.end();

@@ -2,8 +2,8 @@
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
-Date:
-Exercise 2.2.2 and 2.2.3 TBD
+Date: 2/14/2018
+Exercise 2.2.2 and 2.2.3 
 
 Remark:
 Python 2.7 is recommended
@@ -31,7 +31,7 @@ Exercise 2.2.3
 # base class(es) (TBD by student)
 
 Implementations:
-Write comments
+See file 2.2_Solution\Implementations\Loans\Mortgages.py
 ==================================================================================================='''
 
 def main():
@@ -39,9 +39,9 @@ def main():
 	print('\n====================================Exercise 2.2.2 & 2.2.3=====================================\n');
 	print('Creating a MortgageMixin class, a VariableMortgage and a FixedMortgage ... \n');
 	home=PrimaryHome(initValue=1000000, yearlyDepre=0.20);
-	varMortgage=VariableMortgage(home=home, face=1000000, rateDict={1:0.05,2:0.06,3:0.08,4:0.12,5:0.08,6:0.05}, term=6);
+	varMortgage=VariableMortgage(home, 1000000, {1:0.05,2:0.06,3:0.08,4:0.12,5:0.08,6:0.05}, 6);
 	fixMortgage=FixedMortgage(home=home, face=1000000, rate=0.05, term=6);
-	raw_input('Program pause. Press enter to continue.\n');
+	raw_input('The demo successfully finished. Press press any key to exit.\n\n');
 
 if __name__=='__main__':
 	main()

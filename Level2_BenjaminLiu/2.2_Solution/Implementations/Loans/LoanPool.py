@@ -2,16 +2,14 @@
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
-Date:
+Date: 2/14/2018
 Exercise 2.2.5
 
 Remark:
 Python 2.7 is recommended
-Before running please install packages
-Using cmd line py -2.7 -m install [package_name]
 '''
 from Implementations.Loans.Loan import *
-from Implementations.Loan.Loans import *
+from Implementations.Loans.Loans import *
 import logging
 logging.getLogger().setLevel(logging.DEBUG)
 
@@ -60,52 +58,56 @@ class LoanPool(object):
 	def ttlPrincipal(self):
 		ttl=0;
 		for i in self._loan:
-			ttl+=self._loan[i].face
+			ttl+=i.face
 		return ttl
 
 	# b) A method to get the total loan balance for a given period
 	def ttlBalance(self, period):
 		ttl=0;
 		for i in self._loan:
-			ttl+=self._loan[i].balanceRecur(period);
+			ttl+=i.balanceRecur(period);
 		return ttl 
 
 	# c) Methods to get the aggregate principal, interest, and total payment due in a given period
 	def ttlPrincipalDue(self, period):
 		ttl=0;
 		for i in self._loan:
-			ttl+=self._loan[i].principalDueRecur(period);
+			ttl+=i.principalDueRecur(period);
 		return ttl
 
-	def ttlInterestDue(self):
+	def ttlInterestDue(self, period):
 		ttl=0;
 		for i in self._loan:
-			ttl+=self._loan[i].interestDueRecur(period);
+			ttl+=i.interestDueRecur(period);
 		return ttl
 
-	def ttlPaymentDue(self):
-		ttl=;
+	def ttlPaymentDue(self, period):
+		ttl=0;
 		for i in self._loan:
-			ttl+=self._loan[i].monthlyPayment(period);
+			ttl+=i.monthlyPayment(period);
 		return ttl 
 
 	# d) A method that returns the number of ‘active’ loans. Active loans are loans that have a balance 
 	# greater than zero
-	def activeLoan(self):
-		pass
+	def activeLoan(self, period):
+		active=0;
+		for i in self._loan:
+			if i.balanceRecur(period)>0:
+				active+=1;
+		return active
 
 	# e) Methods to calculate the Weighted Average Maturity (WAM) and Weighted Average Rate (WAR) of the 
 	# loans. You may port over the previously implemented global functions
 	def WAM(self):
 		loanAmounts=[]; loanTerms=[];
 		for i in self._loan:
-			loanAmounts.append(self._loan[i].face);
-			loanTerms.append(self._loan[i].term);
+			loanAmounts.append(i.face);
+			loanTerms.append(i.term);
 		return reduce(lambda total, (face, term): total+(face*term), zip(loanAmounts, loanTerms), 0)
 
 	def WAR(self):
 		loanAmounts=[]; rates=[];
 		for i in self._loan:
-			loanAmounts.append(self._loan[i].face);
-			rates.append(self._loan[i].rate);
+			loanAmounts.append(i.face);
+			rates.append(i.rate(period=1));
 		return reduce(lambda total, (face, rate): total+(face*rate), zip(loanAmounts, rates), 0)

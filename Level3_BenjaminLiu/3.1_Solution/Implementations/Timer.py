@@ -7,7 +7,7 @@ Exercise 2.1.1
 
 Remark:
 Python 2.7 is recommended
-Before running please install packages *datetime, *warnings
+Before running please install packages
 Using cmd line py -2.7 -m install [package_name]
 '''
 import time 

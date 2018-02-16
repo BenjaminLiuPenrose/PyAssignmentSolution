@@ -2,13 +2,11 @@
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
-Date:
+Date: 2/14/2018
 Exercise Exercise 2.2.2 and 2.2.3
 
 Remark:
 Python 2.7 is recommended
-Before running please install packages *logging
-Using cmd line py -2.7 -m install [package_name]
 '''
 from Implementations.Loans.Loans import VariableRateLoan, FixedRateLoan
 from Implementations.Assets.Asset import *
@@ -42,6 +40,7 @@ class MortgageMixin(object):
 			self._home=HouseBase(face); 	
 			logging.error('The entered home does not belong to HouseBase. \n');
 		super(MortgageMixin, self).__init__(self._home, face, rate, term)
+
 	def PMI(self, period):
 		LTV=float(self.balanceRecur(period-1))/self._home.initValue
 		if LTV>=0.80:

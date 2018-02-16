@@ -2,13 +2,11 @@
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
-Date:
+Date: 2/14/2018
 Exercise 2.2.4
 
 Remark:
 Python 2.7 is recommended
-Before running please install packages
-Using cmd line py -2.7 -m install [package_name]
 '''
 from Implementations.Loans.Loan import *
 import logging
@@ -19,7 +17,6 @@ File content:
 # Exercise 2.2.4
 # Create a fixed AutoLoan class. This should derive-from the appropriate base class(es)
 ==================================================================================================='''
-
 
 # Exercise 2.2.4
 class AutoLoan(Loan):
