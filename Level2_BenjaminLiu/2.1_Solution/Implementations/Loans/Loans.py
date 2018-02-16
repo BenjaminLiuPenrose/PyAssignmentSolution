@@ -3,7 +3,7 @@
 '''
 Student name: Beier (Benjamin) Liu
 Date:
-Exercise xxx:
+Exercise 2.2.1
 
 Remark:
 Python 2.7 is recommended

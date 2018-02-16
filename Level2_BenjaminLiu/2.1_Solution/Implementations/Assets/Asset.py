@@ -42,11 +42,11 @@ class Asset(object):
 	# Getter and setter
 	@property
 	def initValue(self):
-		return float(self._iniValue)
+		return float(self._initValue)
 
-	@iniValue.setter
-	def initValue(self, iIniValue):
-		self._iniValue=iIniValue;
+	@initValue.setter
+	def initValue(self, iInitValue):
+		self._initValue=iInitValue;
 
 	# b) Create a method that returns a yearly depreciation rate
 	@property
@@ -124,7 +124,7 @@ class Lamborghini(Car):
 		self._yearlyDepre=yearlyDepre;
 		super(Lamborghini, self).__init__(initValue);
 
-class Car(Asset2):
+class Car2(Asset2):
 	def __init__(self, initValue, carType='Civic', yearlyDepreDict={'Civic':0.20, 'Lexus':0.10, 'Lamborghini':0.05}):
 		self._carType=carType;
 		self._yearlyDepre=yearlyDepreDict.get(carType);
@@ -133,7 +133,7 @@ class Car(Asset2):
 # c) Create a HouseBase class, derived from Asset. Derive PrimaryHome and VacationHome from House
 # Give each one a different depreciation rate (note, a vacation home will depreciate slower than 
 # a primary home since it is often vacant)
-class HouseBase(Asset):
+class HouseBase(Asset2):
 	pass
 	# def __init__(self, initValue):
 	# 	super(HouseBase, self).__init__()

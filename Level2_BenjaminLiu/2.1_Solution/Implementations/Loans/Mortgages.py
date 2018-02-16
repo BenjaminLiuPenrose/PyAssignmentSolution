@@ -3,11 +3,11 @@
 '''
 Student name: Beier (Benjamin) Liu
 Date:
-Exercise Exercise 2.2.2 - 2.2.3
+Exercise Exercise 2.2.2 and 2.2.3
 
 Remark:
 Python 2.7 is recommended
-Before running please install packages
+Before running please install packages *logging
 Using cmd line py -2.7 -m install [package_name]
 '''
 from Implementations.Loans.Loans import VariableRateLoan, FixedRateLoan
@@ -38,8 +38,8 @@ class MortgageMixin(Object):
 			self._home=home;
 		else :
 			self._home=HouseBase(face); 	
-			logging.error('The entered home does not belong to HouseBase');
-		super(MortgageMixin, self).__init__(asset=None, face=face, rate=rate, term=term)
+			logging.error('The entered home does not belong to HouseBase. \n');
+		super(MortgageMixin, self).__init__()
 
 	def PMI(self, period):
 		LTV=float(self.balanceRecur(period-1))/self._home.initValue

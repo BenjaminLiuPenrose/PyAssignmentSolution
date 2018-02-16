@@ -10,10 +10,9 @@ Python 2.7 is recommended
 Before running please install packages
 Using cmd line py -2.7 -m install [package_name]
 '''
-from Implementations.Loans.Loan import *
 
 '''===================================================================================================
-File content:
+Main program:
 # Exercise 2.2.5
 # Create a LoanPool class that can contain and operate on a pool of loans (composition). Provide the 
 # following functionality:
@@ -24,8 +23,18 @@ File content:
 # greater than zero.
 # e. Methods to calculate the Weighted Average Maturity (WAM) and Weighted Average Rate (WAR) of the 
 # loans. You may port over the previously implemented global functions
+
+Implementations:
+Write comments
 ==================================================================================================='''
 
-# Exercise 2.2.5
-class LoanPool(Loan):
-	pass
+def main():
+	# Exercise 2.2.5
+	# Write comments
+	print('\n====================================Exercise 2.2.5=====================================\n');
+	print('Running my myFunction function ... \n');
+	myFunction();
+	raw_input('Program pause. Press enter to continue.\n');
+
+if __name__=='__main__':
+	main()
