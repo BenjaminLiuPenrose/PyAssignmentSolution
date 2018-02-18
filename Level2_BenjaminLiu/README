@@ -6,10 +6,10 @@ First, go to 2.1_Solution,
 For Exercise 2.1.1, run Timer_Main.py in shell, follow the instrcutions in shell step by step
 implementation code for this part can be found at 2.2_Solution\Implementations\Timer.py
 
-For Exercise 2.1.2 to , run Loan_Main.py in shell, follow the instrcutions step by step
+For Exercise 2.1.2 to 2.1.5, run Loan_Main.py in shell, follow the instrcutions step by step
 implementation code for this part can be found at 2.2_Solution\Implementations\Loans\Loan.py
 
-For Exercise 2.1. , run Asset_Main.py in shell, follow the instrcutions step by step
+For Exercise 2.1.6 , run Asset_Main.py in shell, follow the instrcutions step by step
 implementation code for this part can be found at 2.2_Solution\Implementations\Assets\Asset.py
 
 
