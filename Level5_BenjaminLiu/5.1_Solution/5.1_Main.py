@@ -71,7 +71,7 @@ Main program:
 # parameter. Create a term method that calculates and returns the loan term (in months) from the two dates
 
 Implementations:
-Write comments
+See implementations in the code followed by the main() program
 ==================================================================================================='''
 
 def main():
@@ -93,15 +93,38 @@ def main():
 	# time_var.year
 	logging.info(time_var.strftime('Year:%Y \nMonth:%m \nDay:%d \nHour: %H \nMinute:%M \nSecond:%S \nMicrosecond:%f \n'));
 
-	logging.info('Step d:')
+	logging.info('Step d: Displaying the datetiem with format one ... \n');
 	logging.info(time_var.strftime('%Y-%m-%d %H:%M:%S:%f'));
 
-	logging.info('Step e:')
+	logging.info('Step e: Displaying the datetime with format two ... \n');
 	logging.info(time_var.strftime('%Y %m %d %H %M %S %f'));
 
 	now=datetime.datetime.now()
+	logging.info('Displaying the datetiem with format one ... \n');
+	logging.info(now.strftime('%Y-%m-%d %H:%M:%S:%f'));
+
+	logging.info('Displaying the datetime with format two ... \n');
+	logging.info(now.strftime('%Y %m %d %H %M %S %f'));
+
 	utcnow=datetime.datetime.utcnow()
-	myFunction();
+	logging.info('Displaying the datetiem with format one ... \n');
+	logging.info(utcnow.strftime('%Y-%m-%d %H:%M:%S:%f'));
+
+	logging.info('Displaying the datetime with format two ... \n');
+	logging.info(utcnow.strftime('%Y %m %d %H %M %S %f'));
+
+	raw_input('Program pause. Press enter to continue.\n');
+
+	# Exercise 5.1.2
+	logging.info('\n====================================Exercise 5.1.2=====================================\n');
+	strdate1=raw_input('Please enter the datetime in the following format: (yyyy-mm-dd hh:mm:ss:fffff) ... \n');
+	date1=timefstr(strdate1, '%Y-%m-%d %H:%M:%S:%f');
+	raw_input('Program pause. Press enter to continue.\n');
+
+	# Exercise 5.1.3
+	logging.info('\n====================================Exercise 5.1.3=====================================\n');
+	strdate2=raw_input('Please enter the datetime in the following format: (yyyy-mm-dd hh:mm:ss:fffff) ... \n');
+	date2=timefstr(strdate2, '%Y-%m-%d %H:%M:%S:%f');
 	raw_input('Program pause. Press enter to continue.\n');
 
 	# Exercise xyz
@@ -110,6 +133,32 @@ def main():
 	logging.info('Running my myFunction function ... \n');
 	myFunction();
 	raw_input('Program pause. Press enter to continue.\n');
+
+# Exercise 5.1.4 implementation
+def dateCalculator():
+	strdate=raw_input('Please enter one datetime in the following format: (yyyy-mm-dd hh:mm:ss:fffff) ... \n');
+	strdatedelta=raw_input('Please enter datetime delta in the following format: (yyyy-mm-dd hh:mm:ss:fffff) ... \n');
+	date=timefstr(strdate, '%Y-%m-%d %H:%M:%S:%f');
+	datedelta=timefstr(strdatedelta, '%Y-%m-%d %H:%M:%S:%f');
+
+	strdate2=timefstr(date2, '%Y-%m-%d %H:%M:%S:%f');
+	logging.info('The resulting time is {}.'.format(strdate2));
+	logging.info('The date calculator is exiting. Have a nice day, sir!');
+
+# Exercise 5.1.5 implementation
+def dateDiff():
+	strdate1=raw_input('Please enter one datetime in the following format: (yyyy-mm-dd hh:mm:ss:fffff) ... \n');
+	strdate2=raw_input('Please enter another datetime in the following format: (yyyy-mm-dd hh:mm:ss:fffff) ... \n');
+	date1=timefstr(strdate1, '%Y-%m-%d %H:%M:%S:%f');
+	date2=timefstr(strdate2, '%Y-%m-%d %H:%M:%S:%f');
+
+	logging.info('The total number of days are {}.'.format());
+	logging.info('The total number of hours are {}.'.format());
+	logging.info('The total number of minutes are {}.'.format());
+	logging.info('The total number of seconds are {}.'.format());
+	logging.info('The total number of microseconds are {}.'.format());
+	logging.info('The difference is {0} days, {1} hours, {2} minutes, {3} seconds, and {4} microseconds.'.format());
+	logging.info('The date differential is exiting. Have a nice day, sir!');
 
 if __name__=='__main__':
 	main()
