@@ -35,7 +35,7 @@ class Loan(object):
 		else :
 			self._asset=PrimaryHome(face);
 			logging.error('The input asset is not of type Asset. \n');
-			raise Exception('The input asset is not of type Asset. \n');
+			# raise Exception('The input asset is not of type Asset. \n');
 		if isinstance(rate, (int, float)) :
 			self._rate=Loan.monthlyRate(rate);
 		else :
@@ -57,12 +57,12 @@ class Loan(object):
 	def face(self, iface):
 		self._face=iface;
 
-	@property
-	def rate(self, period):
+	# @property
+	def rate(self, period=1):
 		return float(self._rate);
 
-	@rate.setter
-	def rate(self, irate, period):
+	# @rate.setter
+	def rate(self, irate, period=1):
 		self._rate=irate;
 
 	@property

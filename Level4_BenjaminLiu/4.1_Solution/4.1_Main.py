@@ -2,7 +2,7 @@
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
-Date:
+Date: 2/18/2018
 Exercise 4.1.1 - 4.1.4
 
 Remark:
@@ -172,8 +172,8 @@ def main():
 	print('{0} is {1:.1f} years old and lives in {2}\n'.format(name, age, country));
 	# b) Display the number with one decimal place with format keyword placeholders
 	print('{name} is {age:.1f} years old and lives in {country}\n'.format(name=name, age=age, country=country));
-	print('The method of format function and keyword placeholders is more readable and clear, but it is lengthy\n');
-	raw_input('Exercise 4.1.4 to 4.1.4 demo finished successfully! Press any key to exit.\n');
+	print('The method of format function and keyword placeholders is more readable and clear. (but it is lengthy) \n');
+	raw_input('Exercise 4.1.1 to 4.1.4 demo finished successfully! Press any key to exit.\n');
 
 if __name__=='__main__':
 	main()

@@ -2,8 +2,8 @@
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
-Date: 2/18/2018
-Exercise 4.2.1 and 4.2.2
+Date: 
+Exercise 
 
 Remark:
 Python 2.7 is recommended
@@ -15,18 +15,11 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 '''===================================================================================================
 File content:
-# Exercise 4.2.1
-# Modify your Timer class to use a logging statement (info level) instead of a print statement
 
-# Exercise 4.2.2
-# Modify your Timer class as follows:
-# a. Add a class-level warnThreshold variable, which defaults to 1 minute.
-# b. When printing the time taken, use a warn-level log statement instead of info-level if the 
-# time taken exceeds the warn threshold
 ==================================================================================================='''
 
 class Timer(object):
-	_warnThreshold=60; # warnThreshold variable default is 1 min.
+	_warnThreshold=60;
 
 	def __init__(self, timerName):
 		self._timerName=timerName;
@@ -47,13 +40,37 @@ class Timer(object):
 		self.end();
 		return True
 
+	@property
+	def timerName(self):
+		return self._timerName
+
+	@timerName.setter
+	def timerName(self, iTimerName):
+		self._timerName=iTimerName;
+
+	@property
+	def config(self):
+		return self._config
+
+	@property
+	def t0(self):
+		return self._t0
+
+	@property
+	def tn(self):
+		return self._tn
+
+	@property
+	def state(self):
+		return self._state
+
 	@classmethod
 	def getWarnThreshold(cls):
 		return cls._warnThreshold
 
 	@classmethod
-	def setWarnThreshold(cls, ithreshold):
-		cls._warnThreshold=ithreshold
+	def setWarnThreshold(cls, iWarnThreshold):
+		cls._warnThreshold=iWarnThreshold;
 
 	def configureTimerDisplay(self, *args):
 		self._config=args;
@@ -76,10 +93,10 @@ class Timer(object):
 				logging.warning('Time elapsed exceeds 60s. {} : {} seconds. \n'.format(self._timerName, self._t))
 			else :
 				logging.info('Timer stops. {} : {} seconds. \n'.format(self._timerName, self._t));
-			# if self._config==None:
-			# 	self.display('secs');
-			# else :
-			# 	self.display(*self._config)
+			if self._config==None:
+				self.display('secs');
+			else :
+				self.display(*self._config)
 		except Exception as e:
 			logging.exception('{} \nPlease use start() before using end(). \n'.format(e));
 		self._t0=None;

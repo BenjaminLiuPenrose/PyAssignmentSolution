@@ -1,0 +1,3 @@
+loan type, asset name, asset value, amount, rate, term
+<class 'Implementations.Loans.FixedRateLoan'>, <class 'Implementations.Asset.PrimaryHome'>, 10000.0, 10000.0, 0.05, 12.0
+<class 'Implementations.Loans.FixedRateLoan'>, <class 'Implementations.Asset.PrimaryHome'>, 1000.0, 1000.0, 0.05, 12.0

@@ -3,7 +3,7 @@
 '''
 Student name: Beier (Benjamin) Liu
 Date: 2/14/2018
-Exercise 2.2.5
+Exercise 
 
 Remark:
 Python 2.7 is recommended
@@ -15,20 +15,11 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 '''===================================================================================================
 File content:
-# Exercise 2.2.5
-# Create a LoanPool class that can contain and operate on a pool of loans (composition). Provide the 
-# following functionality:
-# a. A method to get the total loan principal.
-# b. A method to get the total loan balance for a given period.
-# c. Methods to get the aggregate principal, interest, and total payment due in a given period.
-# d. A method that returns the number of ‘active’ loans. Active loans are loans that have a balance 
-# greater than zero.
-# e. Methods to calculate the Weighted Average Maturity (WAM) and Weighted Average Rate (WAR) of the 
-# loans. You may port over the previously implemented global functions
+
 ==================================================================================================='''
 
-# Exercise 2.2.5
 class LoanPool(object):
+	# init
 	def __init__(self, *loan):
 		self._loan=[];
 		for l in loan:
@@ -37,70 +28,81 @@ class LoanPool(object):
 			else :
 				logging.error('The loan you are entering does not belong to class Loan. \n');
 
+	def __iter__(self):
+		for l in self.loan:
+			yield l;
+
+	# getter and setter
 	@property
-	def loan(self, number):
-		try :
-			self._loan[number];
-			return self._loan[number];
-		except Exception as e:
-			logging.exception('{} \n'.format(e));
-			logging.error('The index of loan you are choosing does not exist. \n');
+	def loan(self, number=None):
+		if number!=None:
+			try :
+				self._loan[number];
+				return self._loan[number];
+			except Exception as e:
+				logging.exception('{} \n'.format(e));
+				logging.error('The index of loan you are choosing does not exist. \n');
+		else :
+			return self._loan
 
 	@loan.setter
-	def loan(self, number, iLoan):
-		try :
-			self._loan[number]=iLoan;
-		except Exception as e:
-			logging.exception('{} \n'.format(e));
-			logging.error('The index of loan you are choosing does not exist. \n');
+	def loan(self, iLoan, number=None):
+		if number!=None:
+			try :
+				self._loan[number]=iLoan;
+			except Exception as e:
+				logging.exception('{} \n'.format(e));
+				logging.error('The index of loan you are choosing does not exist. \n');
+		else :
+			try :
+				logging.warning('You are trying to replace all loans in LoanPool. \n');
+				self._loan=iLoan
+			except Exception as e:
+				logging.exception('{} \n'.format(e));
+				logging.error('In order to replace the LoanPool, please enter a list of Loan objects. \n');
 
-	# a) A method to get the total loan principal.
+
+	# object-level method
 	def ttlPrincipal(self):
 		ttl=0;
-		for i in self._loan:
+		for i in self.loan:
 			ttl+=i.face
 		return ttl
 
-	# b) A method to get the total loan balance for a given period
 	def ttlBalance(self, period):
 		ttl=0;
-		for i in self._loan:
+		for i in self.loan:
 			ttl+=i.balanceRecur(period);
 		return ttl 
 
-	# c) Methods to get the aggregate principal, interest, and total payment due in a given period
 	def ttlPrincipalDue(self, period):
 		ttl=0;
-		for i in self._loan:
+		for i in self.loan:
 			ttl+=i.principalDueRecur(period);
 		return ttl
 
 	def ttlInterestDue(self, period):
 		ttl=0;
-		for i in self._loan:
+		for i in self.loan:
 			ttl+=i.interestDueRecur(period);
 		return ttl
 
 	def ttlPaymentDue(self, period):
 		ttl=0;
-		for i in self._loan:
+		for i in self.loan:
 			ttl+=i.monthlyPayment(period);
 		return ttl 
 
-	# d) A method that returns the number of ‘active’ loans. Active loans are loans that have a balance 
-	# greater than zero
 	def activeLoan(self, period):
 		active=0;
-		for i in self._loan:
+		for i in self.loan:
 			if i.balanceRecur(period)>0:
 				active+=1;
 		return active
 
-	# e) Methods to calculate the Weighted Average Maturity (WAM) and Weighted Average Rate (WAR) of the 
-	# loans. You may port over the previously implemented global functions
 	def WAM(self):
 		loanAmounts=[]; loanTerms=[]; I=[];
-		for i in self._loan:
+		for i in self.loan:
 			loanAmounts.append(i.face);
 			loanTerms.append(i.term);
 			I.append(1.0);
@@ -109,7 +111,7 @@ class LoanPool(object):
 
 	def WAR(self):
 		loanAmounts=[]; rates=[];
-		for i in self._loan:
+		for i in self.loan:
 			loanAmounts.append(i.face);
 			rates.append(i.rate(period=1));
 		sumWeight=reduce(lambda total, (face, inden): total+(face*inden), zip(loanAmounts, I), 0)

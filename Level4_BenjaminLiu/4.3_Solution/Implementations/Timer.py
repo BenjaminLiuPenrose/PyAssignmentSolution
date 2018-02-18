@@ -72,7 +72,7 @@ class Timer(object):
 			self._tn=time.time();
 			self._t=self._tn-self._t0;
 			self._history.append(self._t);
-			if self._t > self._warnThreshold:
+			if self_t > self._warnThreshold:
 				logging.warning('Time elapsed exceeds 60s. {} : {} seconds. \n'.format(self._timerName, self._t))
 			else :
 				logging.info('Timer stops. {} : {} seconds. \n'.format(self._timerName, self._t));
@@ -81,7 +81,7 @@ class Timer(object):
 			# else :
 			# 	self.display(*self._config)
 		except Exception as e:
-			logging.exception('{} \nPlease use start() before using end(). \n'.format(e));
+			logging.error('Please use start() before using end(). \n');
 		self._t0=None;
 		self._state=False;
 
