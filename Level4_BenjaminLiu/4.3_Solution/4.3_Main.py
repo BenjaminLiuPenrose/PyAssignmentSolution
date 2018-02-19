@@ -18,7 +18,7 @@ import numpy as np
 from Implementations.Loans import *
 from Implementations.LoanPool import *
 from Implementations.Loan import *
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.INFO)
 
 '''===================================================================================================
 Main program:

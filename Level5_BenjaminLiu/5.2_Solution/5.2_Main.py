@@ -14,6 +14,7 @@ import os, time, logging
 import copy, math
 import functools, itertools
 import numpy as np 
+from Implementations.Loans.Loan import *
 logging.getLogger().setLevel(logging.DEBUG)
 
 '''===================================================================================================
@@ -38,23 +39,73 @@ Use your memoization decorator from the previous exercise to memoize the recursi
 Loan waterfall functions. Time the functions before and after; do you see a difference
 
 Implementations:
-Write comments
+See implementations followed by the main() function
 ==================================================================================================='''
 
 def main():
-	# Exercise xyz
+	# Exercise 5.2.1
 	# Write comments
-	print('\n====================================Exercise xyz=====================================\n');
-	print('Running my myFunction function ... \n');
-	myFunction();
+	logging.info('\n====================================Exercise 5.2.1=====================================\n');
+	logging.info('Running my myFunction function ... \n');
+	myFunction(5);
+	logging.info('The decorator approach looks simpler to write. If we need to use the Timer whenever we are calling method myFunction, decorator is helpful. If it is not the case, context manager is more helpful. \n')
 	raw_input('Program pause. Press enter to continue.\n');
 
-	# Exercise xyz
-	# Write comments
-	print('\n====================================Exercise xyz=====================================\n');
-	print('Running my myFunction function ... \n');
-	myFunction();
+	# Exercise 5.2.2
+	logging.info('\n====================================Exercise 5.2.2=====================================\n');
+	logging.info('Running my myIntenseFunction function ... \n');
+	logging.info(myIntenseFunction(1, 2));
+	logging.info(myIntenseFunction(1, 2));
+	logging.info('The later 0.0 sec is displayed since the second time the program skip the evaluation of myIntenseFunction already.')
 	raw_input('Program pause. Press enter to continue.\n');
+
+	# Exercise 5.2.3
+	logging.info('\n====================================Exercise 5.2.3=====================================\n');
+	logging.info('Running my myIntenseFunction function ... \n');
+	logging.info(testOnLoan(6)) 
+	logging.info(testOnLoan(8)) 
+	logging.info(testOnLoan(6)) 
+	logging.info('The later 0.0 sec is displayed since the second time the program skip the evaluation of myIntenseFunction already.')
+	raw_input('Program pause. Press enter to continue.\n');
+
+# Exercise 5.2.1 Implementation
+def Timer(func):
+	@functools.wraps(func)
+	def wrapped(*args, **kwargs):
+		s=time.time()
+		res=func(*args, **kwargs);
+		e=time.time()
+		logging.info('{}: {} seconds.'.format(func, e-s))
+		return res
+	return wrapped
+
+@Timer
+def myFunction(input):
+	time.sleep(input)
+	return 'Done'
+
+# Exercise 5.2.2 Implementation
+def memoize(func):
+    memo = {}
+    @functools.wraps(func)
+    def wrapped(*args):
+        if args not in memo:            
+            memo[args] = func(*args)
+        return memo[args]
+    return wrapped 
+
+@Timer 
+@memoize 
+def myIntenseFunction(*args):
+	time.sleep(5);
+	return args
+
+# Exercise 5.2.3 Implementation
+@Timer
+@memoize
+def testOnLoan(period):
+	loan=Loan(None, 1000000, 0.05, 12); # 12 months loan
+	return loan.balanceRecur(period);
 
 if __name__=='__main__':
 	main()

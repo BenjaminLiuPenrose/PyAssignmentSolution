@@ -57,11 +57,11 @@ class Loan(object):
 	def face(self, iface):
 		self._face=iface;
 
-	# @property
+	@property
 	def rate(self, period=1):
 		return float(self._rate);
 
-	# @rate.setter
+	@rate.setter
 	def rate(self, irate, period=1):
 		self._rate=irate;
 
@@ -103,6 +103,9 @@ class Loan(object):
 		cls.calcMonthlyPmt(face, rate, term)*((1+rate)**period-1)/rate;
 
 	# Object-level methods
+	def rate(self, period):
+		return float(self._rate)
+
 	def monthlyPayment(self, period): #period is dummy variable
 		pmt=float((self.face*self.rate(period)))/(1-(1+self.rate(period))**(-self.term));
 		logging.debug('The monthly payment for {} is {}.'.format(period, pmt))

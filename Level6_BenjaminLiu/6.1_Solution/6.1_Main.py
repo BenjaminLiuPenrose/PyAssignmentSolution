@@ -2,8 +2,8 @@
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
-Date:
-Exercise 6.1.1
+Date: 18/2/2018
+Exercise 6.1.1 to 6.1.3
 
 Remark:
 Python 2.7 is recommended
@@ -14,6 +14,8 @@ import os, time, logging
 import copy, math
 import functools, itertools
 import numpy as np 
+from Implementations.PlayerGame import *
+from Implementations.Tools import *
 logging.getLogger().setLevel(logging.DEBUG)
 
 '''===================================================================================================
@@ -41,7 +43,6 @@ Main program:
 # properly, you need to scale all the frequencies down (this is called normalizing the curve). We wish to 
 # scale each frequency in the histogram to have a min of 1 dash and a max of 100 dashes. We can do so using 
 # the following formula:
-# ( )
 # Also, note that you will need to round each decimal value to the nearest integer (we don’t wish to have a 
 # separate frequency entry for every decimal). Example output:
 # 1: ---
@@ -76,23 +77,110 @@ Main program:
 # d. Check if the final chosen door is a winner or loser and return the Boolean result.
 # d) Play the game one time from main to verify that it works.
 # e) Play the game in a loop of 10,000,000 times from main and store the results of each play in a list. The 
-# average of this list should be the approximate probability of winning with your chosen strategy (stay or 
+# average of this list should be the approximate probability of winning with your chosen strategy (hold or 
 # switch). Time this function (it may take some time).
 # f) Was your hypothesis correct?
 # Congrats on your first Monte Carlo simulation in Python! The subsequent exercises will look to speed thus 
 # up by using multi-processing in Python
 
 Implementations:
-Write comments
+See implementations followed by main() function
+See implementations in Implementations.PlayerGame.py
 ==================================================================================================='''
 
 def main():
-	# Exercise xyz
-	# Write comments
-	print('\n====================================Exercise xyz=====================================\n');
-	print('Running my myFunction function ... \n');
-	myFunction();
+	# Exercise 6.1.1
+	# logging.info('\n====================================Exercise 6.1.1=====================================\n');
+	# logging.info('Running my myFunction function ... \n');
+	# ls1=list(np.random.uniform(1, 20, 200000))
+	# ls2=list(np.random.normal(10, 7, 200000))
+	# ls3=list(np.random.lognormal(1, 0.5, 200000))
+	# with open('input.csv', 'w') as f:
+	# 	f.write('unifrom, normal, lognormal\n'); 
+	# 	for i in range(200000):
+	# 		f.write('{}, {}, {}\n'.format(ls1[i], ls2[i], ls3[i]));
+	# raw_input('Program pause. Press enter to continue.\n');
+
+	# Exercise 6.1.2
+	logging.info('\n====================================Exercise 6.1.2=====================================\n');
+	logging.info('Running my random number routine ...');
+	ls1=np.random.uniform(1, 20, 200000).astype(int)
+	ls2=np.random.normal(10, 7, 200000).astype(int)
+	ls3=np.random.lognormal(1, 0.5, 200000).astype(int)
+	freq1=freq(ls1); freq1=curveNormalization(freq1, max_new=100, min_new=1); hist(ls1, freq1);
+	freq2=freq(ls2); freq2=curveNormalization(freq2, max_new=100, min_new=1); hist(ls2, freq2);
+	freq3=freq(ls3); freq3=curveNormalization(freq3, max_new=100, min_new=1); hist(ls3, freq3);
 	raw_input('Program pause. Press enter to continue.\n');
+
+	# Exercise 6.1.3
+	logging.info('\n====================================Exercise 6.1.3=====================================\n');
+	logging.info('Step a: My hypothesis is I should switch.\n');
+	raw_input('Program pause. Press enter to continue.\n');
+
+	logging.info('Step b to d: Running my playGame method ... \n ')
+	player_hold=Player('Alex', 'Hold');
+	player_switch=Player('Clare', 'Switch');
+	game=Game(player_switch); 
+	game.playGame()
+	raw_input('Program pause. Press enter to continue.\n');
+
+	logging.info('Step e: Playing games for 100000000 times ... \n ')
+	res_hold=[]; res_switch=[];
+	for i in range(100000000):
+		logging.info('**********************************This is Game {}*************************************'.format(i+1))
+		game_hold=Game(player_hold);
+		game_hold.playGame();
+		game_switch=Game(player_switch);
+		game_switch.playGame();
+		res_hold.append(player_hold.payoff);
+		res_switch.append(player_switch.payoff);
+	logging.info('\nThe payoffs of hold strategy (1 stands for winning Lamborghini) {}\nThe payoffs of switch strategy {}'.format(res_hold, res_hold))
+	logging.info('\nThe prob of winning under hold strategy is {}.\nThe prob of winning under switch strategy is {}.'.\
+		format(sum(res_hold)/float(len(res_hold)), sum(res_switch)/float(len(res_switch))))
+	raw_input('Program pause. Press enter to continue.\n');
+
+	logging.info('Step f: My conclusion is correct.\n');
+	raw_input('Demo finished successfully. Press any key to exit.\n');
+
+
+# def Timer(func):
+# 	@functools.wraps(func)
+# 	def wrapped(*args, **kwargs):
+# 		s=time.time()
+# 		res=func(*args, **kwargs);
+# 		e=time.time()
+# 		logging.info('{}: {} seconds.'.format(func, e-s))
+# 		return res
+# 	return wrapped
+
+@Timer
+def freq(ls): # return np.array
+	freq=np.zeros((max(ls)-min(ls)+1, 1))
+	for num in ls:
+		for i in xrange(min(ls), max(ls)+1):	
+			if num==i:
+				freq[i-min(ls)]+=1;
+	return freq
+
+@Timer
+def curveNormalization(freq, max_new, min_new): # return list
+	# max_old=max(freq); min_old=min(freq);
+	# new_freq=freq;
+	# for idx, f in enumerate(freq):
+	# 	new_freq[idx]=(max_new-min_new)/(max_old-min_old)*(f-min_old)+max_new;
+	# return new_freq
+	return [int((max_new-min_new)/(max(freq)-min(freq))*(f-min(freq))+max_new) for f in freq]
+
+@Timer
+def hist(lst, freq):
+	for idx, f in enumerate(freq):
+		ls=[];
+		for _ in range(1, f+1):
+			ls.append('-');
+		dash=''.join(ls);
+		# logging.info('{}: {}'.format(idx+min(lst), dash))
+		print('{}: {}'.format(idx+min(lst), dash))
+
 
 if __name__=='__main__':
 	main()
