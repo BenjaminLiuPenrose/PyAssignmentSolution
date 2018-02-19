@@ -157,9 +157,7 @@ def main():
 def freq(ls): # return np.array
 	freq=np.zeros((max(ls)-min(ls)+1, 1))
 	for num in ls:
-		for i in xrange(min(ls), max(ls)+1):	
-			if num==i:
-				freq[i-min(ls)]+=1;
+		freq[num-min(ls)]+=1;
 	return freq
 
 @Timer

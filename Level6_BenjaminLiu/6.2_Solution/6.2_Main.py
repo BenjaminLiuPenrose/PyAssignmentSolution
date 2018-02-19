@@ -38,56 +38,18 @@ def main():
 	# Exercise 6.2.1
 	print('\n====================================Exercise 6.2.1=====================================\n');
 	print('Running my multiprocessing demo ... \n');
+	freq1=multiProcess(50, freq, ls1); freq1=curveNormalization(freq1, max_new=100, min_new=1); hist(ls1, freq1); 
+	game=[i for i in xrange(100000000)];res=multiProcess(5, montyHall, game);
+	print res
+	# res1=multiProcess(5, f, np.random.uniform(0,1,100), np.random.uniform(0,1,100))
 
-	res1=multiProcess(5, f, np.random.uniform(0,1,100), np.random.uniform(0,1,100))
-	res2=multiProcess(50, f, np.random.uniform(0,1,100), np.random.uniform(0,1,100))
-	res3=multiProcess(100, f, np.random.uniform(0,1,100), np.random.uniform(0,1,100))
 
-	print sum(res1)/float(len(res1));
-	print sum(res2)/float(len(res2));
-	print sum(res3)/float(len(res3));
-
+	# print sum(res)/float(len(res));
+	# print sum(res2)/float(len(res2));
+	# print sum(res3)/float(len(res3));
 	raw_input('Demo finished successfully. Press any key to exit.\n');
 
-	# Exercise xyz
-	# Write comments
-	print('\n====================================Exercise xyz=====================================\n');
-	print('Running my myFunction function ... \n');
-	myFunction();
-	raw_input('Program pause. Press enter to continue.\n');
-
-def f(a, b):
-	time.sleep(2)
-	return a
-
-def montyHall(i):
-	logging.info('**********************************This is Game {}*************************************'.format(i+1))
-	game_hold=Game(player_hold);
-	game_hold.playGame();
-	res_hold.append(player_hold.payoff);
-
-	# # play game start
-	# res_hold=[]; res_switch=[];
-	# for i in range(100000000):
-	# logging.info('**********************************This is Game {}*************************************'.format(i+1))
-	# game_hold=Game(player_hold);
-	# game_hold.playGame();
-	# # game_switch=Game(player_switch);
-	# # game_switch.playGame();
-	# res_hold.append(player_hold.payoff);
-	# # res_switch.append(player_switch.payoff);
-	# # play game end
-
-freq1=freq(ls1); freq1=curveNormalization(freq1, max_new=100, min_new=1); hist(ls1, freq1);
-def freq(ls): # return np.array
-	freq=np.zeros((max(ls)-min(ls)+1, 1))
-	for num in ls:
-		for i in xrange(min(ls), max(ls)+1):	
-			if num==i:
-				freq[i-min(ls)]+=1;
-	return freq
-
-
+#################################################################################################################################
 def Timer(func):
 	@functools.wraps(func)
 	def wrapped(*args, **kwargs):
@@ -98,13 +60,26 @@ def Timer(func):
 		return res
 	return wrapped
 
+def f(a, b):
+	time.sleep(2)
+	return a
+
+def montyHall(i):
+	logging.info('**********************************This is Game {}*************************************'.format(i+1))
+	player_hold=Player('Alex', 'Hold');
+	game_hold=Game(player_hold);
+	game_hold.playGame()；
+	player_switch=Player('Clare', 'Switch');
+	game_switch=Game(player_switch);
+	game_switch.playGame();
+	return (player_hold.payoff, player_switch.payoff)
+
+
+def freq(num): # return np.array
+	return num 
+
 @Timer
 def curveNormalization(freq, max_new, min_new): # return list
-	# max_old=max(freq); min_old=min(freq);
-	# new_freq=freq;
-	# for idx, f in enumerate(freq):
-	# 	new_freq[idx]=(max_new-min_new)/(max_old-min_old)*(f-min_old)+max_new;
-	# return new_freq
 	return [int((max_new-min_new)/(max(freq)-min(freq))*(f-min(freq))+max_new) for f in freq]
 
 @Timer
@@ -122,7 +97,6 @@ def multiProcess(process_num, func, *args):
 	input_queue=multiprocessing.Queue()
 	output_queue=multiprocessing.Queue()
 
-	# print tuple([x[0] for x in args])
 	for i in range(len(args[0])):
 		input_queue.put((func, tuple([x[i] for x in args])))
 
@@ -130,15 +104,16 @@ def multiProcess(process_num, func, *args):
 		multiprocessing.Process(target=doWork, args=(input_queue, output_queue)).start()
 
 	res=[];
+	freq=np.zeros((max(args[0])-min(args[0])+1, 1)) ###
 	while 1:
 		r=output_queue.get()
 		if r!='Done':
-			#res.append()
+			# freq[r-min(args[0])]+=1; ###
+			res.append(r)
 			pass
 		else :
 			break
-
-	return res
+	return res#, freq 
 
 def doWork(input, output):
 	while 1:
