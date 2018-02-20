@@ -18,11 +18,8 @@ import multiprocessing
 logging.getLogger().setLevel(logging.DEBUG)
 
 '''===================================================================================================
-Main program:
+File Content:
 Timer, memoize, multiProcess
-
-Implementations:
-Write comments
 ==================================================================================================='''
 
 def Timer(func):
@@ -44,31 +41,42 @@ def memoize(func):
         return memo[args]
     return wrapped 
 
+
 @Timer
-def multiProcess(input_size, process_num, func, *args):
+def multiProcess(process_num, func, *args):
 	input_queue=multiprocessing.Queue()
 	output_queue=multiprocessing.Queue()
 
-	for i in range(input_size):
-		input_queue.put((func, args))
+	for i in range(len(args[0])):
+		input_queue.put((func, tuple([x[i] for x in args])))
 
 	for i in range(process_num):
 		multiprocessing.Process(target=doWork, args=(input_queue, output_queue)).start()
 
 	res=[];
+	# freq=np.zeros((max(args[0])-min(args[0])+1, 1)) ###
 	while 1:
 		r=output_queue.get()
+		logging.debug('The r is {}'.format(r))
 		if r!='Done':
-			res.append()
+			# freq[r-min(args[0])]+=1; ###
+			res.append(r)
+			pass
 		else :
 			break
+	input_queue.close(); output_queue.close()
+	return res#, freq 
 
 def doWork(input, output):
 	while 1:
 		try :
+			logging.debug('Point 1');
 			func, args=input.get(timeout=3);
+			logging.debug('Point 2 {} {}'.format(args,*args))
 			res=func(*args)
+			logging.debug('Running the func.')
 			output.put(res)
-		except :
+		except Exception as e:
+			logging.debug('{}'.format(e));
 			output.put('Done')
 			break

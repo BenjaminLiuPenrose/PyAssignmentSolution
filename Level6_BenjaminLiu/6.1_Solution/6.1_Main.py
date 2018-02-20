@@ -16,7 +16,7 @@ import functools, itertools
 import numpy as np 
 from Implementations.PlayerGame import *
 from Implementations.Tools import *
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.INFO)
 
 '''===================================================================================================
 Main program:
@@ -104,9 +104,9 @@ def main():
 	# Exercise 6.1.2
 	logging.info('\n====================================Exercise 6.1.2=====================================\n');
 	logging.info('Running my random number routine ...');
-	ls1=np.random.uniform(1, 20, 200000).astype(int)
-	ls2=np.random.normal(10, 7, 200000).astype(int)
-	ls3=np.random.lognormal(1, 0.5, 200000).astype(int)
+	ls1=list(np.random.uniform(1, 20, 200000).astype(int))
+	ls2=list(np.random.normal(10, 7, 200000).astype(int))
+	ls3=list(np.random.lognormal(1, 0.5, 200000).astype(int))
 	freq1=freq(ls1); freq1=curveNormalization(freq1, max_new=100, min_new=1); hist(ls1, freq1);
 	freq2=freq(ls2); freq2=curveNormalization(freq2, max_new=100, min_new=1); hist(ls2, freq2);
 	freq3=freq(ls3); freq3=curveNormalization(freq3, max_new=100, min_new=1); hist(ls3, freq3);
@@ -124,9 +124,9 @@ def main():
 	game.playGame()
 	raw_input('Program pause. Press enter to continue.\n');
 
-	logging.info('Step e: Playing games for 100000000 times ... \n ')
+	logging.info('Step e: Playing games for 10000000 times ... \n ')
 	res_hold=[]; res_switch=[];
-	for i in range(100000000):
+	for i in range(10000000):
 		logging.info('**********************************This is Game {}*************************************'.format(i+1))
 		game_hold=Game(player_hold);
 		game_hold.playGame();
@@ -142,32 +142,25 @@ def main():
 	logging.info('Step f: My conclusion is correct.\n');
 	raw_input('Demo finished successfully. Press any key to exit.\n');
 
-
-# def Timer(func):
-# 	@functools.wraps(func)
-# 	def wrapped(*args, **kwargs):
-# 		s=time.time()
-# 		res=func(*args, **kwargs);
-# 		e=time.time()
-# 		logging.info('{}: {} seconds.'.format(func, e-s))
-# 		return res
-# 	return wrapped
-
 @Timer
-def freq(ls): # return np.array
-	freq=np.zeros((max(ls)-min(ls)+1, 1))
-	for num in ls:
-		freq[num-min(ls)]+=1;
-	return freq
+def freq(ls): # return list
+	# upper part is depreciated method
+	# freq=np.zeros((max(ls)-min(ls)+1, 1))
+	# cnt=0;
+	# for num in ls:
+	# 	freq[num-min(ls)]+=1;
+	# 	cnt+=1; logging.debug('Function freq() running count is {}.'.format(cnt)) 
+	return [ls.count(i) for i in range(min(ls), max(ls)+1)]
 
 @Timer
 def curveNormalization(freq, max_new, min_new): # return list
+	# upper part is depreciated method
 	# max_old=max(freq); min_old=min(freq);
 	# new_freq=freq;
 	# for idx, f in enumerate(freq):
-	# 	new_freq[idx]=(max_new-min_new)/(max_old-min_old)*(f-min_old)+max_new;
+	# 	new_freq[idx]=(max_new-min_new)/(max_old-min_old)*(f-min_old)+min_new;
 	# return new_freq
-	return [int((max_new-min_new)/(max(freq)-min(freq))*(f-min(freq))+max_new) for f in freq]
+	return [int((max_new-min_new)/(float(max(freq)-min(freq)))*(f-min(freq))+min_new) for f in freq]
 
 @Timer
 def hist(lst, freq):
@@ -176,7 +169,6 @@ def hist(lst, freq):
 		for _ in range(1, f+1):
 			ls.append('-');
 		dash=''.join(ls);
-		# logging.info('{}: {}'.format(idx+min(lst), dash))
 		print('{}: {}'.format(idx+min(lst), dash))
 
 

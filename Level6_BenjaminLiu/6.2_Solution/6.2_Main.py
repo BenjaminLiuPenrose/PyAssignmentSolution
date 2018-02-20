@@ -15,8 +15,9 @@ import copy, math
 import functools, itertools
 import numpy as np 
 import multiprocessing 
+from Implementations.PlayerGame import *
 # from Implementations.Tools import *
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.INFO)
 
 '''===================================================================================================
 Main program:
@@ -36,17 +37,36 @@ See implementations followed by main() function
 
 def main():
 	# Exercise 6.2.1
-	print('\n====================================Exercise 6.2.1=====================================\n');
-	print('Running my multiprocessing demo ... \n');
-	freq1=multiProcess(50, freq, ls1); freq1=curveNormalization(freq1, max_new=100, min_new=1); hist(ls1, freq1); 
-	game=[i for i in xrange(100000000)];res=multiProcess(5, montyHall, game);
-	print res
-	# res1=multiProcess(5, f, np.random.uniform(0,1,100), np.random.uniform(0,1,100))
+	logging.info('\n====================================Exercise 6.2.1=====================================\n');
+	game=[i for i in xrange(10000000)]; 
+	logging.info('Step a to c: Runing 5 processes ... \n');
+	s=time.time();
+	res=multiProcess(5, montyHall, game);
+	e=time.time()
+	logging.info('Using {} process(es), it takes time {}'.format(5, e-s))
+
+	logging.info('Step d and e: Searching optimal processes number (Calculating the original single precoess cost) ... \n')
+	logging.info('Original it takes 147 secs, with multiprocessing method, it takes 60 secs with optimal_processes 8')
+	ls=[2**i for i in range(8)]
+	minimum=10000000; optimal_processes=1
+	for i in ls:
+		s=time.time()
+		res=multiProcess(i, montyHall, game);
+		e=time.time()
+		if e-s<minimum:
+			optimal_processes=i
+			minimum=e-s
+		if i==1:
+			original_time=e-s
+		logging.info('Using {} process(es), it takes time {}'.format(i, e-s))
+	logging.info('Original it takes {} secs, with multiprocessing method, it takes {} secs with optimal_processes {}.'\
+		.format(original_time, minimum, optimal_processes))
+	res_hold=[r[0] for r in res]; 
+	res_switch=[r[1] for r in res];
+	logging.info('The prob of winning with stay strategy is {}.'.format(sum(res_hold)/float(len(res_hold))));
+	logging.info('The prob of winning with switch strategy is {}.'.format(sum(res_switch)/float(len(res_switch))));
 
 
-	# print sum(res)/float(len(res));
-	# print sum(res2)/float(len(res2));
-	# print sum(res3)/float(len(res3));
 	raw_input('Demo finished successfully. Press any key to exit.\n');
 
 #################################################################################################################################
@@ -56,41 +76,22 @@ def Timer(func):
 		s=time.time()
 		res=func(*args, **kwargs);
 		e=time.time()
-		logging.info('{}: {} seconds.'.format(func, e-s))
+		logging.debug('{}: {} seconds.'.format(func, e-s))
 		return res
 	return wrapped
 
-def f(a, b):
-	time.sleep(2)
-	return a
-
 def montyHall(i):
-	logging.info('**********************************This is Game {}*************************************'.format(i+1))
+	logging.debug('**********************************This is Game {}*************************************'.format(i+1))
 	player_hold=Player('Alex', 'Hold');
 	game_hold=Game(player_hold);
-	game_hold.playGame()；
+	game_hold.playGame();
 	player_switch=Player('Clare', 'Switch');
 	game_switch=Game(player_switch);
 	game_switch.playGame();
 	return (player_hold.payoff, player_switch.payoff)
 
-
-def freq(num): # return np.array
-	return num 
-
-@Timer
-def curveNormalization(freq, max_new, min_new): # return list
-	return [int((max_new-min_new)/(max(freq)-min(freq))*(f-min(freq))+max_new) for f in freq]
-
-@Timer
-def hist(lst, freq):
-	for idx, f in enumerate(freq):
-		ls=[];
-		for _ in range(1, f+1):
-			ls.append('-');
-		dash=''.join(ls);
-		# logging.info('{}: {}'.format(idx+min(lst), dash))
-		print('{}: {}'.format(idx+min(lst), dash))
+# def freq(num): 
+# 	return num 
 
 @Timer
 def multiProcess(process_num, func, *args):
@@ -107,23 +108,45 @@ def multiProcess(process_num, func, *args):
 	freq=np.zeros((max(args[0])-min(args[0])+1, 1)) ###
 	while 1:
 		r=output_queue.get()
+		logging.debug('The r is {}'.format(r))
 		if r!='Done':
 			# freq[r-min(args[0])]+=1; ###
 			res.append(r)
 			pass
 		else :
 			break
+	input_queue.close(); output_queue.close()
 	return res#, freq 
 
 def doWork(input, output):
 	while 1:
 		try :
+			logging.debug('Point 1');
 			func, args=input.get(timeout=3);
+			logging.debug('Point 2 {} {}'.format(args,*args))
 			res=func(*args)
+			logging.debug('Running the func.')
 			output.put(res)
-		except :
+		except Exception as e:
+			logging.debug('{}'.format(e));
 			output.put('Done')
 			break
 
+# @Timer
+# def curveNormalization(freq, max_new, min_new): # return list
+# 	return [int((max_new-min_new)/(max(freq)-min(freq))*(f-min(freq))+max_new) for f in freq]
+
+# @Timer
+# def hist(lst, freq):
+# 	for idx, f in enumerate(freq):
+# 		ls=[];
+# 		for _ in range(1, f+1):
+# 			ls.append('-');
+# 		dash=''.join(ls);
+# 		logging.info('{}: {}'.format(idx+min(lst), dash))
+
 if __name__=='__main__':
+	# ls1=np.random.uniform(1, 20, 200000).astype(int)
+	# freq1=multiProcess(50, freq, ls1); freq1=curveNormalization(freq1, max_new=100, min_new=1); hist(ls1, freq1); 
+	# res1=multiProcess(5, f, np.random.uniform(0,1,100), np.random.uniform(0,1,100))
 	main()
