@@ -1,0 +1,32 @@
+This is my solution to Final Project
+
+This can be found at https://github.com/BenjaminLiuPenrose/PyAssignmentSolution
+
+Overview of files structure
+Part1_Waterfall\Implementations\Assets\AssetBase.py class Asset
+Part1_Waterfall\Implementations\Assets\Car.py class Car, Civic, Lexus, Lamborghini
+Part1_Waterfall\Implementations\Assets\House.py class HouseBase, PrimaryHome, VacationHome
+Part1_Waterfall\Implementations\Loans\LoanBase.py class Loan, FixedRateLoan, VariableRateLoan
+Part1_Waterfall\Implementations\Loans\Mortgage.py class MortgageMixin, FixedMortgage, VariableMortgage
+Part1_Waterfall\Implementations\Loans\AutoLoan.py class AutoLoan
+Part1_Waterfall\Implementations\Loans\LoanPool.py class LoanPool
+Part1_Waterfall\Implementations\Tranches\TrancheBase.py class Tranche
+Part1_Waterfall\Implementations\Tranches\StandardTranche.py class StandardTranche
+Part1_Waterfall\Implementations\Tranches\StructuredSecurity.py class StructuredSecurity, function doWaterfall
+Part1_Waterfall\Implementations\Timer.py class Timer
+Part1_Waterfall\Implementations\Tools.py Timer, memoize, multiProcess
+
+First, go to 6.1_Solution, 
+for Exercise 6.1.1, data is in the Excel file
+for Exercise 6.1.2 and 6.1.3, run 6.1_Main.py in shell, follow the instrcutions in shell step by step
+implementation code for this part can be found at the latter part of the code line
+implementation code for this part can be found at 6.1_Solution\Implementations\PlayerGame.py
+
+Second, go to 6.2_Solution, 
+for Exercise 6.2.1, run 1.2_Main.py in shell, follow the instrcutions in shell step by step
+implementation code for this part can be found at the latter part of the code line
+implementation code for this part can be found at 6.1_Solution\Implementations\PlayerGame.py
+
+Debug suggested view can be found at Level1_BenjaminLiu\RecView.png
+
+Enjoy!
