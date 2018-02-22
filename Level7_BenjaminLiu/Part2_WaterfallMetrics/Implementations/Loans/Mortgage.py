@@ -13,6 +13,7 @@ import functools, itertools
 import numpy as np 
 from Implementations.Loans.LoanBase import *
 from Implementations.Assets.House import *
+from Implementations.Toolsimport *
 logging.getLogger().setLevel(logging.DEBUG)
 
 '''===================================================================================================
@@ -35,12 +36,12 @@ class MortgageMixin(object):
 			return 0.000075
 		else :
 			return 0.0
-
+	@memoize
 	def monthlyPayment(self, period):
 		pmt=float((self._face*self._rate))/(1-(1+self._rate)**(-self._term));
 		pmt+=self.PMI(period)*super(MortgageMixin, self).balanceRecur(period-1);
 		return pmt
-
+	@memoize
 	def principalDueRecur(self, period): 
 		return self.monthlyPayment(period)-super(MortgageMixin, self).interestDueRecur(period)- \
 		self.PMI(period)*super(MortgageMixin, self).balanceRecur(period-1);

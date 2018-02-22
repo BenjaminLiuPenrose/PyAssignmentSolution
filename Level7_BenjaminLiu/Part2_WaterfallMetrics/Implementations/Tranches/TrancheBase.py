@@ -18,14 +18,16 @@ File content:
 
 ==================================================================================================='''
 class Tranche(object):
-	def __int__(self, face, rate, subordination):
+	def __init__(self, face, rate, subordination):
 		self._face=face;
 		self._rate=Tranche.monthlyRate(rate);
 		self._currentPeriod=0;
-		self._principalHistory=[];
-		self._interestHistory=[];
-		self._principalShort=[];
-		self._interestShort=[];
+		self._principalHistory=[0];
+		self._interestHistory=[0];
+		self._principalShort=[0];
+		self._interestShort=[0];
+		self._interestDueHist=[0];
+		self._balance=[face];
 		if isinstance(subordination, (str, int, float)):
 			self._subordination=subordination;
 		else :
@@ -52,8 +54,8 @@ class Tranche(object):
 		self._subordination=isubord;
 	@property
 	def currentPeriod(self):
-		return self._currentTime
-	@setter
+		return self._currentPeriod
+	@currentPeriod.setter
 	def currentPeriod(self, icurrentPeriod):
 		self._currentPeriod=icurrentPeriod;
 	@property
@@ -68,6 +70,12 @@ class Tranche(object):
 	@property
 	def interestShout(self):
 		return self._interestShort
+	@property
+	def interestDueHist(self):
+		return self._interestDueHist
+	@property
+	def balance(self):
+		return self._balance
 	@staticmethod
 	def monthlyRate(APR):
 		return APR/12.0
@@ -78,7 +86,7 @@ class Tranche(object):
 	def IRR(self):
 		ls=[self._principalHistory[i]+self._interestHistory[i] for i in range(len(self._principalHistory))];
 		ls.insert(0, -self._face);
-		IRR=np.IRR(ls); IRR*=12.0;
+		IRR=np.irr(ls); IRR*=12.0;
 		return IRR
 
 	def DIRR(self):
@@ -89,6 +97,6 @@ class Tranche(object):
 			return None 
 		else :
 			period=[i for i in range(len(self._principalHistory))]
-			AL=reduce(lambda total, (period, principalPayment): total+period*principalPayment, (period, self._principalHistory), 0);
+			AL=reduce(lambda total, (period, principalPayment): total+period*principalPayment, zip(period, self._principalHistory), 0);
 			AL=AL/float(self._face);
 			return AL 

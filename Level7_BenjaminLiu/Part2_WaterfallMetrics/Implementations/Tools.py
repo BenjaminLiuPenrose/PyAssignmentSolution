@@ -23,7 +23,7 @@ def Timer(func):
 		s=time.time()
 		res=func(*args, **kwargs);
 		e=time.time()
-		logging.info('{}: {} seconds.'.format(func, e-s))
+		logging.debug('{}: {} seconds.'.format(func, e-s))
 		return res
 	return wrapped
 

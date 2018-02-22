@@ -18,8 +18,8 @@ from Implementations.Loans.LoanPool import *
 from Implementations.Tranches.StructuredSecurity import *
 from Implementations.Loans.AutoLoan import *
 from Implementations.Assets.Car import *
-from Implementations.Tranches.StandardTrache import *
-logging.getLogger().setLevel(logging.DEBUG)
+from Implementations.Tranches.StandardTranche import *
+logging.getLogger().setLevel(logging.INFO)
 '''===================================================================================================
 Main program:
 Write comments
@@ -35,18 +35,21 @@ def main():
 	print('Creating a LaonPool object with the csv file of loan data ... \n');
 	myLoanPool=LoanPool()
 	with open('Loans2.csv', 'r') as f:
-		f.readline();
+		f.readline();cnt=0;
 		while 1:
 			line=f.readline();
 			if line=='':
 				break
+			elif cnt==1500: # cnt id for debug perpose
+				break
 			else :
 				lst=line.split(',');
-				logging.debug(lst);
-				loan.AutoLoan(Car(initValue=lst[6]), face=lst[2], rate=lst[3], term=lst[4])
+				# logging.debug(lst);
+				loan=AutoLoan(Civic(initValue=float(lst[6])), face=float(lst[2]), rate=float(lst[3]), term=float(lst[4]))
 				myLoanPool.loans.append(loan);
+				cnt+=1;
 
-	logging.debug('The first loan is {}'.format(myLoanPool.loans[0].rate(1)))
+	logging.debug('The first loan is {}'.format(myLoanPool.loans[0].face))
 	raw_input('Program pause. Press enter to continue.\n');
 
 	# Instantiate your StructuredSecurities object, specify the total notional (from the LoanPool), add 
@@ -56,9 +59,10 @@ def main():
 	# have a higher rate, as they have increased risk
 	print('\n====================================Part 1.2=====================================\n');
 	print('Instantiate my StructuredSecurity object ... \n');
-	myStandardTrache_A=StandardTrache(myLoanPool.ttlPrincipal()/3.0, 0.1, 'A');
-	myStandardTrache_B=StandardTrache(myLoanPool.ttlPrincipal()/3.0*2, 0.2, 'B');
-	myStructuredSecurity=StructuredSecurity('Sequential', myStandardTrache_A, myStandardTrache_B);
+	myStructuredSecurity=StructuredSecurity(myLoanPool.ttlPrincipal(), 'Sequencial');
+	myStructuredSecurity.addTranche(0.8, 0.05, 'A');
+	myStructuredSecurity.addTranche(0.2, 0.15, 'B');
+	logging.debug('The first tranche is {}'.format(myStructuredSecurity.tranches[0].rate*12.0))
 	raw_input('Program pause. Press enter to continue.\n');
 
 	# Call doWaterfall and save the results into two CSV files (one for the asset side and one for the 
@@ -68,14 +72,45 @@ def main():
 	# get this to output correctly
 	print('\n====================================Part 1.3=====================================\n');
 	print('Running my doWaterfall function and saving to a csv file ... \n');
-	waterfall_s, waterfall_l, reserve_account=doWaterfall(myLoanPool, myStructuredSecurity);
-	raw_input('Program pause. Press enter to continue.\n');
+	waterfall_s, waterfall_l, reserve_account, IRR_s, DIRR_s, AL_s=doWaterfall(myLoanPool, myStructuredSecurity);
+	logging.debug('The waterfall for StructuredSecurity is {}'.format(waterfall_s));
+	logging.debug('The waterfall for LoanPool is {}'.format(waterfall_l));
+	logging.debug('The reserve_account is {}'.format(reserve_account));
+	logging.debug('The IRR for StructuredSecurity is {}'.format(reserve_account));
+	logging.debug('The DIRR for StructuredSecurity is {}'.format(reserve_account));
+	logging.debug('The AL for StructuredSecurity is {}'.format(reserve_account));
+	waterfall_liabilities=[];
+	for period, tranches in enumerate(waterfall_s):
+		ls=[period];
+		for t in tranches:
+			ls+=[t[0], t[1], t[2], t[3], t[4]]
+		waterfall_liabilities.append(ls);
+	logging.debug('Waterfall for L is {}'.format(waterfall_liabilities))
+	with open('liabilities.csv', 'w') as f:
+		header=['Period', 'A_interestDue', 'A_interestPaid', 'A_interetShort', 'A_principalPaid', 'A_balance'];
+		header+=['B_interestDue', 'B_interestPaid', 'B_interetShort', 'B_principalPaid', 'B_balance'];
+		f.write(','.join(header)); f.write('\n');
+		for row in waterfall_liabilities:
+			row=[str(entry) for entry in row];
+			f.write(','.join(row)); f.write('\n');
+	logging.info('file liabilities.csv is generated successfully.')
 
-	# Write comments
-	print('\n====================================Exercise xyz=====================================\n');
-	print('Running my myFunction function ... \n');
-	myFunction();
-	raw_input('Program pause. Press enter to continue.\n');
+	waterfall_asset=[];
+	for period, item in enumerate(waterfall_l):
+		ls=[period];
+		ls+=[item[0], item[1], item[2], item[3], item[4]]
+		waterfall_asset.append(ls);
+	logging.debug('Waterfall for A is {}'.format(waterfall_asset))
+	with open('asset.csv', 'w') as f:
+		header=['Period', 'Principal', 'Interest', 'Recoveries', 'Total', 'Balance'];
+		f.write(','.join(header)); f.write('\n');
+		for row in waterfall_asset:
+			row=[str(entry) for entry in row];
+			f.write(','.join(row)); f.write('\n');
+	logging.info('file asset.csv is generated successfully.')
+
+	raw_input('Part 1 demo finished successfully. Press any key to exit.\n');
+
 
 if __name__=='__main__':
 	main()

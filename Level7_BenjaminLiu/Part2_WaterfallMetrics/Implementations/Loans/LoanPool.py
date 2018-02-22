@@ -72,13 +72,17 @@ class LoanPool(object):
 	# it returns list of lists and each list is of form [Interest Paid, Principal Paid, Recoveries, Total, Balance]
 	def getWaterfall(self, period):
 		waterfall=[];
+		interestPaid_=0; principalPaid_=0; recoveryValue_=0; total_=0; balance_=0
 		for l in self._loans:
 			interestPaid=l.interestDueRecur(period) if l.mode!='defaulted' else 0
 			principalPaid=l.principalDueRecur(period) if l.mode!='defaulted' else 0
 			recoveryValue=l.recoveryValue(period) if l.mode=='defaulted' else 0
 			balance=l.balanceRecur(period)
-			ls=[interetsPaid, principalPaid, recoveryValue, interestPaid+principalPaid+recoveryValue, balance]
-			waterfall.append(ls);
+			interestPaid_+=interestPaid; principalPaid_+=principalPaid; recoveryValue_+=recoveryValue;
+			total_+=interestPaid+principalPaid+recoveryValue; balance_+=balance
+			# ls=[principalPaid, interestPaid, recoveryValue, interestPaid+principalPaid+recoveryValue, balance]
+			# waterfall.append(ls);
+		waterfall=[principalPaid_, interestPaid_, recoveryValue_, total_, balance_];
 		return waterfall
 
 	def checkDefaults(self, period):
