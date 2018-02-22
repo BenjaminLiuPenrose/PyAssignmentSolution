@@ -152,3 +152,29 @@ def simulateWaterfall(loanPool, structuredSecurity, NSIM):
 		DIRR_avg.append(sum(dirr)/float(len(dirr)));
 		AL_avg.append(sum(al)/float(len(al))); 
 	return DIRR_avg, AL_avg
+
+def runMonte(loanPool, structuredSecurity, NSIM, tol): # idea: convert diff to inner product of notional and percentage change
+	while 1:
+		DIRR, AL=simulateWaterfall(loanPool, structuredSecurity, MSIM);
+		Yield=[calculateYield(dirr, al) for dirr,al in zip(DIRR, AL)];
+		percentChg=[]; coeff_dict={'A':1.2, 'B':0.8};
+		for idx, t in enumerate(structuredSecurity.tranches):
+			coeff=coeff_dict.get(t.subordination);
+			oldRate=t.rate;
+			newRate=t.rate+coeff*(Yield[idx]-t.rate);
+			r.rate=newRate; 
+			chg=abs(oldRate-newRate)/oldRate;
+			percentChg.append(chg);
+		notional=[t.face for t in structuredSecurity.tranches]
+		ttlNotional=float(sum(notional));
+		diff=reduce(lambda total, (notional, percentChg): total+(notional*percentChg), zip(notional, percentChg), 0)
+		diff=diff/ttlNotional;
+		if diff < tol:
+			break
+
+
+def calculateYield(DIRR, AL):
+	r=7/(1+0.08*exp(-0.19/12.0*WAL));
+	r+=0.019*sqrt(WAL/12.0*DIRR*100);
+	r=r/100.0;
+	return r

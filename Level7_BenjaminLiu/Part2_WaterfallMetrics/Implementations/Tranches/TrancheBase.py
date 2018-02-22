@@ -90,7 +90,7 @@ class Tranche(object):
 		return IRR
 
 	def DIRR(self):
-		return self.IRR()-self._rate
+		return self.IRR()-self._rate*12.0 # annual rate
 
 	def AL(self):
 		if self.notionalBalance()!=0 :
