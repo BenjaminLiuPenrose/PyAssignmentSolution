@@ -11,7 +11,7 @@ import os, time, logging
 import copy, math
 import functools, itertools
 import numpy as np 
-logging.getLogger().setLevel(logging.DUBUG)
+logging.getLogger().setLevel(logging.DEBUG)
 '''===================================================================================================
 File content:
 

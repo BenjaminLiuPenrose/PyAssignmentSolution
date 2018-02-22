@@ -22,17 +22,13 @@ File content:
 Write comments
 ==================================================================================================='''
 class StructuredSecurity(object):
-	def __init__(self,  *tranches, mode='Sequencial'):
-		self._tranches=[];
-		for t in tranches:
-			if isinstance(t, StandardTranche):
-				self._tranches.append(t);
-			else :
-				logging.error('The loan you are entering does not belong to class StandardTranche.');
-		self._totalFace=sum(t.face for t in tranches)
+	def __init__(self, totalFace, mode='Sequencial'):
+		self._totalFace=totalFace;
 		self._mode=mode.lower();
 		self._reserveAccount=0;
 		self._currentPeriod=0;
+		self._tranches=[];
+
 
 	def __iter__(self):
 		for t in self._tranches:
@@ -48,7 +44,7 @@ class StructuredSecurity(object):
 		else :
 			logging.error('Please use Sequencial or Pro Rata as param for mode setter.');
 	@property
-	def currentPeirod(self):
+	def currentPeriod(self):
 		return self._currentPeriod
 	@currentPeriod.setter
 	def currentPeriod(self, icurrentPeriod):
@@ -60,16 +56,22 @@ class StructuredSecurity(object):
 	def reserveAccount(self, ireserve):
 		self._reserveAccount=ireserve;
 	@property
+	def totalFace(self):
+		return self._totalFace
+	@totalFace.setter
+	def totalFace(self, itotalFace):
+		self._totalFace=itotalFace;
+	@property
 	def tranches(self):
 		return self._tranches
 
-	def addTranche(self, face, rate, subordination, trancheClass='StandardTranche'):
-		tranche_new=StandardTranche(face=face, rate=rate, subordination=subordination);
+	def addTranche(self, percentNotional, rate, subordination, trancheClass='StandardTranche'):
+		tranche_new=StandardTranche(face=self._totalFace*percentNotional, rate=rate, subordination=subordination);
 		self._tranches.append(tranche_new)
 	def increaseTimePeriod(self):
 		for t in self._tranches:
 			t.increaseTimePeriod();
-		self._currentTime+=1;
+		self._currentPeriod+=1;
 
 	def makePayments(self, cashAmount, principalReceived):
 		availableFunds=cashAmount+self._reserveAccount;
@@ -79,15 +81,16 @@ class StructuredSecurity(object):
 			interestDue=t.interestDue()
 			if availableFunds > 0:
 				interestPayment=min(interestDue, availableFunds);
-				t.makeInterestPaymemt(interestPayment, self._currentPeriod)
+				t.makeInterestPayment(interestPayment, self._currentPeriod)
 				availableFunds-=interestPayment;
 			else :
-				t.makeInterestPaymemt(0, self._currentPeriod);
+				t.makeInterestPayment(0, self._currentPeriod);
 
 		for t in sorted_tranches:
 			principalReceived=100 #
 			priorPrincipalShort=t.principalShort[-1]
 			balance=t.notionalBalance();
+			t.balance.append(balance);
 			if availableFunds > 0:
 				if (self._mode=='sequencial'):
 					principalPayment=min(availablePrincipals+priorPrincipalShort, balance, availableFunds)
@@ -107,33 +110,35 @@ class StructuredSecurity(object):
 	# it returns list of lists and each list is of form [Interest Due, Interest Paid, Interest Shortfall, Principal Paid, Balance]
 	def getWaterfall(self):
 		waterfall=[];
-		sorted_tranches=sorted(self._tranches, key=lambda t: t.getSubord())
+		sorted_tranches=sorted(self._tranches, key=lambda t: t.subordination)
 		for t in sorted_tranches:
-			interestDue=t.interestDue()
+			interestDue=t.interestDueHist[-1]
 			interestPaid=t.interestHistory[-1]
 			principalPaid=t.principalHistory[-1]
-			balance=t.notionalBalance()
+			balance=t.balance[-1]
 			ls=[interestDue, interestPaid, interestDue-interestPaid, principalPaid, balance];
 			waterfall.append(ls);
 		return waterfall
 
 def doWaterfall(loanPool, structuredSecurity):
-	waterfall_s=[]; waterfall_l=[];
+	waterfall_s=[]; waterfall_l=[]; reserveAccount_s=[]
 	while loanPool.activeLoan(structuredSecurity.currentPeriod)!=0 :
+		logging.info('The remaining number of active loans is {}'.format(loanPool.activeLoan(structuredSecurity.currentPeriod)))
 		structuredSecurity.increaseTimePeriod();
-		recoveryValue=loanPool.checkDefaults(structuredSecurity.currentPeriod);
+		# recoveryValue=loanPool.checkDefaults(structuredSecurity.currentPeriod);
 		totalPayment=loanPool.ttlPaymentDue(structuredSecurity.currentPeriod); 
 		principalReceived=loanPool.ttlPrincipalDue(structuredSecurity.currentPeriod);
-		totalPayment+=recoveryValue;
+		# totalPayment+=recoveryValue;
 		structuredSecurity.makePayments(totalPayment, principalReceived);
 		waterfall_s.append(structuredSecurity.getWaterfall()); 
-		waterfall_l.append(loanPool.getWaterfall()); 
+		waterfall_l.append(loanPool.getWaterfall(structuredSecurity.currentPeriod)); 
+		reserveAccount_s.append(structuredSecurity.reserveAccount)
 	IRR_s=[]; DIRR_s=[]; AL_s=[];
 	for t in structuredSecurity.tranches:
 		IRR_s.append(t.IRR());
 		DIRR_s.append(t.DIRR());
 		AL_s.append(t.AL());
-	return waterfall_s, waterfall_l, structuredSecurity.getReserveAccount(), IRR_s, DIRR_s, AL_s
+	return waterfall_s, waterfall_l, reserveAccount_s, IRR_s, DIRR_s, AL_s
 
 def simulateWaterfall(loanPool, structuredSecurity, NSIM):
 	DIRR=[]; AL=[];

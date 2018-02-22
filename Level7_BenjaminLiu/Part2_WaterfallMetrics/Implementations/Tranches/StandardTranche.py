@@ -23,14 +23,14 @@ Write comments
 ==================================================================================================='''
 class StandardTranche(Tranche):
 	def increaseTimePeriod(self):
-		self._currentTime+=1;
+		self._currentPeriod+=1;
 
 	def makePrincipalPayment(self, principalPayment, principalDue, period):
 		while 1:
-			if self.notionalBalance()==0:
+			if self.notionalBalance()==0 and principalPayment!=0 :
 				logging.error('The notional balance is zero, no principal payment can be made.');
 				break
-			if len(self._principalHistory)>=period+1 :
+			if len(self._principalHistory)>=period+1 and principalPayment!=0 :
 				logging.error('Sorry, make principal payment twice at the same time period is not allowed.')
 				break
 			self._principalShort.append(principalDue-principalPayment);
@@ -39,12 +39,13 @@ class StandardTranche(Tranche):
 
 	def makeInterestPayment(self, interestPayment, period):
 		while 1:
-			if self.interestDue()==0:
+			if self.interestDue()==0 and interestPayment!=0:
 				logging.error('The interest due is zero, no interest payment can be made.');
 				break
-			if len(self._interestHistory)>=period+1:
+			if len(self._interestHistory)>=period+1 and interestPayment!=0:
 				logging.error('Sorry, make interest payment twice at the same time period is not allowed.')
 				break
+			self._interestDueHist.append(self.interestDue());
 			self._interestShort.append(self.interestDue()-interestPayment);
 			self._interestHistory.append(interestPayment);
 			break
@@ -58,9 +59,9 @@ class StandardTranche(Tranche):
 		return self.notionalBalance()*self._rate+self._interestShort[-1]
 
 	def reset(self):
-		self._principalHistory=[];
-		self._interestHistory=[];
-		self._principalShort=[];
-		self._interestShort=[];
-		self._currentTime=0;
+		self._principalHistory=[0];
+		self._interestHistory=[0];
+		self._principalShort=[0];
+		self._interestShort=[0];
+		self._currentPeriod=0;
 

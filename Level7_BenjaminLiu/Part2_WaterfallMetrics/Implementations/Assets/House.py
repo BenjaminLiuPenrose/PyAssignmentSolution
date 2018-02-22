@@ -18,7 +18,12 @@ File content:
 
 ==================================================================================================='''
 class HouseBase(Asset):
-	pass
+	@property
+	def yearlyDepre(self):
+		return self._yearlyDepre;
+	@yearlyDepre.setter
+	def yearlyDepre(self, iYearlyDepre):
+		self._yearlyDepre=iYearlyDepre;
 
 class PrimaryHome(HouseBase):
 	def __init__(self, initValue, recoveryMult=0.60, yearlyDepre=0.20):

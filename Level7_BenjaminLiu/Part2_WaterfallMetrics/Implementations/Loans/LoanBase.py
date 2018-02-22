@@ -12,6 +12,7 @@ import copy, math
 import functools, itertools
 import numpy as np 
 from Implementations.Assets.AssetBase import *
+from Implementations.Tools import *
 logging.getLogger().setLevel(logging.DEBUG)
 '''===================================================================================================
 File content:
@@ -79,12 +80,16 @@ class Loan(object):
 	def totalInterest(self, period=1):
 		return self._face*self.rate(period)*self._term
 
+	@memoize
 	def interestDueRecur(self, period): 
-		return self.balanceRecur(period-1)*self.rate(period) if self._mode!='defaulted' else 0
+		return self.balanceRecur(period-1)*self.rate(period) if (self._mode!='defaulted' and period<=self._term) else 0
+	@memoize
 	def principalDueRecur(self, period): 
-		return self.monthlyPayment(period)-self.interestDueRecur(period) if self._mode!='defaulted' else 0
+		return self.monthlyPayment(period)-self.interestDueRecur(period) if (self._mode!='defaulted' and period<=self._term) else 0
+	@Timer
+	@memoize
 	def balanceRecur(self, period): 
-		if self._mode=='defaulted':
+		if self._mode=='defaulted' or period > self._term:
 			return 0
 		if period==0:
 			return self._face
@@ -101,13 +106,13 @@ class Loan(object):
 		self.monthlyPayment(period)*((1+self.rate(period))**period-1)/self.rate(period) 
 
 	def recoveryValue(self, period):
-		return self._asset.getPresValue(period)*self._asset.recoveryMult
+		return self._asset.getPresValue(period)*self._asset.recoveryMult if period<=self._term else 0
 	def equity(self, period):
 		return self._asset.getPresValue(period)-self.balanceRecur(period) 
 	def checkDefault(self, num, period):
-		if num==0:
-			self.mode='defaulted';
-			return self._asset.recoveryValue(period)
+		if num==0 and period<=self._term and self._mode!='defaulted':
+			self._mode='defaulted';
+			return self.recoveryValue(period)
 		else :
 			return 0
 
