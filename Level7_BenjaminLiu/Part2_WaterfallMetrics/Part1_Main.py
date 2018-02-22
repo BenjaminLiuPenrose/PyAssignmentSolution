@@ -34,10 +34,18 @@ def main():
 	print('\n====================================Part 1.1=====================================\n');
 	print('Creating a LaonPool object with the csv file of loan data ... \n');
 	myLoanPool=LoanPool()
-	for i in range(1500):
-		car=Car(intValue);
-		loan=AutoLoan(car, face, rate, term);
-		myLoanPool.loans.append(loan);
+	with open('Loans2.csv', 'r') as f:
+		f.readline();
+		while 1:
+			line=f.readline();
+			if line=='':
+				break
+			else :
+				lst=line.split(',');
+				logging.debug(lst);
+				loan.AutoLoan(Car(initValue=lst[6]), face=lst[2], rate=lst[3], term=lst[4])
+				myLoanPool.loans.append(loan);
+
 	logging.debug('The first loan is {}'.format(myLoanPool.loans[0].rate(1)))
 	raw_input('Program pause. Press enter to continue.\n');
 
