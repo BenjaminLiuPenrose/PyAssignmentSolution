@@ -19,6 +19,8 @@ from Implementations.Tranches.StructuredSecurity import *
 from Implementations.Loans.AutoLoan import *
 from Implementations.Assets.Car import *
 from Implementations.Tranches.StandardTranche import *
+from simulateWaterfallParallel_m import *
+from runMonte_m import *
 logging.getLogger().setLevel(logging.INFO)
 np.random.seed(int(time.time()));
 '''===================================================================================================
@@ -49,8 +51,9 @@ def main():
 
 	print('Instantiate my StructuredSecurity object ... \n');
 	myStructuredSecurity=StructuredSecurity(myLoanPool.ttlPrincipal(), 'Sequencial');
-	myStructuredSecurity.addTranche(0.8, 0.05, 'A');
-	myStructuredSecurity.addTranche(0.2, 0.08, 'B');
+	tranchesChar=[(0.8, 0.05, 'A'), (0.2, 0.08, 'B')]
+	for percent, rate, subordination in tranchesChar:
+		myStructuredSecurity.addTranche(percent, rate, subordination);
 	logging.debug('The first tranche is {}'.format(myStructuredSecurity.tranches[0].subordination))
 	raw_input('Program pause. Press enter to continue.\n');
 
@@ -63,12 +66,12 @@ def main():
 	try :
 		if ans.lower()=='y':
 			numProcess_list=[2+2*i for i in range(8)]; numProcess_list.insert(0, 1)
-			minimum=original=float("inf"); optimal_processes=1;
+			minimum=original=float("inf"); optimal_processes=None;
 			for numProcess in numProcess_list:
 				s=time.time(); 
-				_, ls=simulateWaterfallParallel(myLoanPool, myStructuredSecurity, NSIM=2000, numProcess=numProcess);
+				res=simulateWaterfallParallel(myLoanPool, myStructuredSecurity, NSIM=2000, numProcess=numProcess);
 				e=time.time();
-				if e-s<minimum and ls!=[]:
+				if e-s<minimum and res.get('DIRR tranches')!=[]:
 					optimal_processes=numProcess; minimum=e-s;
 				if numProcess==1:
 					original=e-s
@@ -84,20 +87,23 @@ def main():
 
 
 	print('Running my runMonte function ... \n');
-	rate=runMonte(myLoanPool, myStructuredSecurity, NSIM=2000, tol=0.005);
-	# runMonte(myLoanPool, myStructuredSecurity, NSIM=2000, tol=0.005, numProcess=optimal_processes);
-	myStructuredSecurity=StructuredSecurity(myLoanPool.ttlPrincipal(), 'Sequencial');
-	myStructuredSecurity.addTranche(0.8, rate[0], 'A');
-	myStructuredSecurity.addTranche(0.2, rate[1], 'B');
-	waterfall_s, waterfall_l, reserve_account, IRR_s, DIRR_s, AL_s=doWaterfall(myLoanPool, myStructuredSecurity);
+	# res=runMonte(myLoanPool, myStructuredSecurity, NSIM=2000, tol=0.005);
+	res=runMonte(myLoanPool, myStructuredSecurity, NSIM=2000, tol=0.005, numProcess=optimal_processes);
+	rate=res.get('rate');
+	logging.info('The result optimal rates are {}'.format(rate))
+	resStructuredSecurity=StructuredSecurity(myLoanPool.ttlPrincipal(), 'Sequencial');
+	tranchesChar=[(0.8, 0.05, 'A'), (0.2, 0.08, 'B')]
+	tranchesChar=[(percent, rate[idx], subordination) for idx, percent, _, subordination in enumerate(tranchesChar)]
+	for percent, rate, subordination in tranchesChar:
+		resStructuredSecurity.addTranche(percent, rate, subordination);
+	output=doWaterfall(myLoanPool, resStructuredSecurity);
 
-	print('Printing IRR, DIRR, AL and letter rating for Tranche A and Tranche B to the screen ... \n');
-	letter_s=[toLetterRating(DIRR) for DIRR in DIRR_s]; 
-	rate_s=[t.rate*12.0 for t in myStructuredSecurity.tranches]
-	logging.info('For trenche A, the rate is {0}, the IRR is {1}, the DIRR is {2}, the AL is {3}, the letter rating is {4}.'.\
-		format(rate_s[0], IRR_s[0], DIRR_s[0], AL_s[0], letter_s[0]))
-	logging.info('For trenche B, the rate is {0}, the IRR is {1}, the DIRR is {2}, the AL is {3}, the letter rating is {4}.'.\
-		format(rate_s[1], IRR_s[0], DIRR_s[1], AL_s[1], letter_s[1]))
+	print('Printing IRR, DIRR, WAL and letter rating for Tranche A and Tranche B to the screen ... \n');
+	IRR=output.get('IRR tranches'); DIRR=output.get('DIRR tranches'); WAL=output.get('WAL tranches');
+	letter=[toLetterRating(dirr) for dirr in DIRR]; 
+	for idx, _, rate, subordination in enumerate(tranchesChar):
+		logging.info('{0} trenche: class {1}, the rate is {2}, the IRR is {3}, the DIRR is {4}, the AL is {5}, the letter rating is {6}.'.\
+			format(idx, subordination, rate, IRR[0], DIRR[0], WAL[0], letter[0]))
 	raw_input('Part 3 demo finished successfully. Press any key to exit.\n');
 
 

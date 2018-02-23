@@ -35,6 +35,10 @@ run Part3_Main.py in shell, follow the instrcutions in shell step by step
 implementation code for this part can be found at Solution\Implementations\Loans\LoanBase.py, LoanPool.py
 implementation code for this part can be found at Solution\Implementations\Tranches\StructuredSecurity.py
 
+Please ignore folder IGNORE and Construction. Construction folder is under construction and it is going to improve the file structures of Solution folder. 1. global functions will be placed outside with file name *_m.py
+2.The program will be modified so that it can model ABS with tranches more than class A and class B.
+3.The return value of global function will all set to be a dict. The reason for that is global functions in this case are all for running MC simulations, seeking optimal parameters (like rate) and tuning models. It is a good practice to return and store everything about the model/simulation so that we can latter perform analysis on the models. Dictionary is flexible to handle task like this.
+
 Debug suggested view can be found at Level7_BenjaminLiu\RecView.png
 
 Enjoy!

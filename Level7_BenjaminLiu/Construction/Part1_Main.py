@@ -68,8 +68,9 @@ def main():
 	print('\n====================================Part 1.2=====================================\n');
 	print('Instantiate my StructuredSecurity object ... \n');
 	myStructuredSecurity=StructuredSecurity(myLoanPool.ttlPrincipal(), 'Sequencial');
-	myStructuredSecurity.addTranche(0.8, 0.05, 'A');
-	myStructuredSecurity.addTranche(0.2, 0.08, 'B');
+	tranchesChar=[(0.8, 0.05, 'A'), (0.2, 0.08, 'B')]
+	for percent, rate, subordination in tranchesChar:
+		myStructuredSecurity.addTranche(percent, rate, subordination);
 	logging.debug('The first tranche is {}'.format(myStructuredSecurity.tranches[0].rate*12.0))
 	raw_input('Program pause. Press enter to continue.\n');
 
@@ -84,13 +85,7 @@ def main():
 	print('\n====================================Part 1.3=====================================\n');
 	print('Running my doWaterfall function and saving to a csv file ... \n');
 	logging.info('Attention: when running doWaterfall(), I will run checkDefaults(). Or you can go to file StructuredSecurity.py->doWaterfall() to disable it. \n');
-	waterfall_s, waterfall_l, reserve_account, IRR_s, DIRR_s, AL_s=doWaterfall(myLoanPool, myStructuredSecurity);
-	logging.debug('The waterfall for StructuredSecurity is {}'.format(waterfall_s));
-	logging.debug('The waterfall for LoanPool is {}'.format(waterfall_l));
-	logging.debug('The reserve_account is {}'.format(reserve_account));
-	logging.debug('The IRR for StructuredSecurity is {}'.format(IRR_s));
-	logging.debug('The DIRR for StructuredSecurity is {}'.format(DIRR_s));
-	logging.debug('The AL for StructuredSecurity is {}'.format(AL_s));
+	res=doWaterfall(myLoanPool, myStructuredSecurity);
 	waterfall_liabilities=[];
 	for period, tranches in enumerate(waterfall_s):
 		ls=[period+1];
@@ -100,8 +95,10 @@ def main():
 	logging.debug('Waterfall for L is {}'.format(waterfall_liabilities))
 	timestr=datetime.datetime.now().strftime('%H%M%S');
 	with open('liabilities_{}.csv'.format(timestr), 'w') as f:
-		header=['Period', 'A_interestDue', 'A_interestPaid', 'A_interetShort', 'A_principalPaid', 'A_balance'];
-		header+=['B_interestDue', 'B_interestPaid', 'B_interetShort', 'B_principalPaid', 'B_balance'];
+		header=['Period']
+		for idx, _, rate, subordination in enumerate(tranchesChar):
+			name='{} {} {}'.format(idx, rate, subordination);
+			header+=['{} interestDue', '{} interestPaid', '{} interetShort', '{} principalPaid', '{} balance'.format(name,name,name,name,name)];
 		f.write(','.join(header)); f.write('\n');
 		for row in waterfall_liabilities:
 			row=[str(round(entry,2)) for entry in row];

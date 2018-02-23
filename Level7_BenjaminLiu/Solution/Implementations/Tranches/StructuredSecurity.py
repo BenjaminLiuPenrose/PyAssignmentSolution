@@ -240,13 +240,13 @@ def runMonte(loanPool, structuredSecurity, NSIM=2000, tol=0.005, numProcess=None
 			newRate=oldRate+coeff*(Yield[idx]-oldRate);
 			t.rate=newRate; 
 			chg=abs(oldRate-newRate)/oldRate;
-			logging.info('The oldRate is {}, the newRate is {}, the Yield is {}, the chg is {}'.format(oldRate, newRate, Yield[idx], chg))
+			logging.debug('The oldRate is {}, the newRate is {}, the Yield is {}, the chg is {}'.format(oldRate, newRate, Yield[idx], chg))
 			percentChg.append(chg);
 		notional=[t.face for t in structuredSecurity.tranches]
 		ttlNotional=float(sum(notional));
 		diff=reduce(lambda total, (notional, percentChg): total+(notional*percentChg), zip(notional, percentChg), 0)
 		diff=diff/ttlNotional;
-		logging.info('runMonte: The diff is {} and the new rate is {}'.format(diff, [t.rate for t in structuredSecurity.tranches]))
+		logging.debug('runMonte: The diff is {} and the new rate is {}'.format(diff, [t.rate for t in structuredSecurity.tranches]))
 		if diff < tol:
 			rate=[t.rate*12.0 for t in structuredSecurity.tranches]
 			break

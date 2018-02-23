@@ -72,7 +72,7 @@ class LoanPool(object):
 		sumWeight=reduce(lambda total, (face, inden): total+(face*inden), zip(loanAmounts, I), 0)
 		return reduce(lambda total, (face, rate): total+(face*rate), zip(loanAmounts, rates), 0)/sumWeight
 
-	# it returns list of lists and each list is of form [Interest Paid, Principal Paid, Recoveries, Total, Balance]
+	# it returns a dict and each list is of form [Principal Paid, Interest Paid, Recoveries, Total, Balance]
 	def getWaterfall(self, period):
 		waterfall=[];
 		interestPaid_=0; principalPaid_=0; recoveryValue_=0; total_=0; balance_=0
@@ -85,7 +85,8 @@ class LoanPool(object):
 			total_+=interestPaid+principalPaid+recoveryValue; balance_+=balance
 			# ls=[principalPaid, interestPaid, recoveryValue, interestPaid+principalPaid+recoveryValue, balance]
 			# waterfall.append(ls);
-		waterfall=[principalPaid_, interestPaid_, recoveryValue_, total_, balance_];
+		waterfall={'Principal Paid': principalPaid_, 'Interest Paid':interestPaid_, 'Recoveries':recoveryValue_, \
+		'Total':total_, 'Balance':balance_};
 		return waterfall
 
 	'''===================================================================================================

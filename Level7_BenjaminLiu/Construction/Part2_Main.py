@@ -49,31 +49,27 @@ def main():
 
 	print('Instantiate my StructuredSecurity object ... \n');
 	myStructuredSecurity=StructuredSecurity(myLoanPool.ttlPrincipal(), 'Sequencial');
-	myStructuredSecurity.addTranche(0.8, 0.05, 'A');
-	myStructuredSecurity.addTranche(0.2, 0.08, 'B');
+	tranchesChar=[(0.8, 0.05, 'A'), (0.2, 0.08, 'B')]
+	for percent, rate, subordination in tranchesChar:
+		myStructuredSecurity.addTranche(percent, rate, subordination);
 	logging.debug('The first tranche is {}'.format(myStructuredSecurity.tranches[0].rate*12.0))
 
 	print('Running my doWaterfall function ... \n');
 	logging.info('Attention: when running doWaterfall(), I will run checkDefaults(). Or you can go to file StructuredSecurity.py->doWaterfall() to disable it. \n');
-	waterfall_s, waterfall_l, reserve_account, IRR_s, DIRR_s, AL_s=doWaterfall(myLoanPool, myStructuredSecurity);
-	logging.debug('The waterfall for StructuredSecurity is {}'.format(waterfall_s));
-	logging.debug('The waterfall for LoanPool is {}'.format(waterfall_l));
-	logging.debug('The reserve_account is {}'.format(reserve_account));
-	logging.debug('The IRR for StructuredSecurity is {}'.format(IRR_s));
-	logging.debug('The DIRR for StructuredSecurity is {}'.format(DIRR_s));
-	logging.debug('The AL for StructuredSecurity is {}'.format(AL_s));
+	res=doWaterfall(myLoanPool, myStructuredSecurity);
 	raw_input('Program pause. Press enter to continue.\n');
 
 	'''===================================================================================================
 	Implementation and demo for Part2
 	==================================================================================================='''
 	print('\n====================================Part 2 (Different from Part 1)=====================================\n');
-	print('Printing IRR, DIRR, AL and letter rating for Tranche A and Tranche B to the screen ... \n');
-	letter_s=[toLetterRating(DIRR) for DIRR in DIRR_s]; 
+	print('Printing IRR, DIRR, WAL and letter rating for Tranche A and Tranche B to the screen ... \n');
+	IRR=output.get('IRR tranches'); DIRR=output.get('DIRR tranches'); WAL=output.get('WAL tranches');
+	letter=[toLetterRating(dirr) for dirr in DIRR]; 
 	logging.info('For trenche A, the IRR is {0}, the DIRR is {1}, the AL is {2}, the letter rating is {3}.'.\
-		format(IRR_s[0], DIRR_s[0], AL_s[0], letter_s[0]))
+		format(IRR[0], DIRR[0], WAL[0], letter[0]))
 	logging.info('For trenche B, the IRR is {0}, the DIRR is {1}, the AL is {2}, the letter rating is {3}.'.\
-		format(IRR_s[1], DIRR_s[1], AL_s[1], letter_s[1]))
+		format(IRR[1], DIRR[1], WAL[1], letter[1]))
 	print('');
 	raw_input('Part 2 demo finished successfully. Press any key to exit.\n');
 

@@ -85,7 +85,7 @@ def main():
 
 	print('Running my runMonte function ... \n');
 	rate=runMonte(myLoanPool, myStructuredSecurity, NSIM=2000, tol=0.005);
-	# runMonte(myLoanPool, myStructuredSecurity, NSIM=2000, tol=0.005, numProcess=optimal_processes);
+	# rate=runMonte(myLoanPool, myStructuredSecurity, NSIM=2000, tol=0.005, numProcess=optimal_processes);
 	myStructuredSecurity=StructuredSecurity(myLoanPool.ttlPrincipal(), 'Sequencial');
 	myStructuredSecurity.addTranche(0.8, rate[0], 'A');
 	myStructuredSecurity.addTranche(0.2, rate[1], 'B');
