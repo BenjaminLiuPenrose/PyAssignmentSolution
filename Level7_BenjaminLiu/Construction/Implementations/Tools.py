@@ -3,12 +3,9 @@
 '''
 Student name: Beier (Benjamin) Liu
 Date:
-Exercise
 
 Remark:
 Python 2.7 is recommended
-Before running please install packages *numpy
-Using cmd line py -2.7 -m install [package_name]
 '''
 import os, time, logging
 import copy, math
@@ -16,19 +13,17 @@ import functools, itertools
 import numpy as np 
 import multiprocessing
 logging.getLogger().setLevel(logging.INFO)
-
 '''===================================================================================================
-File Content:
-Timer, memoize, multiProcess
-==================================================================================================='''
+File content:
 
+==================================================================================================='''
 def Timer(func):
 	@functools.wraps(func)
 	def wrapped(*args, **kwargs):
 		s=time.time()
 		res=func(*args, **kwargs);
 		e=time.time()
-		logging.info('{}: {} seconds.'.format(func, e-s))
+		logging.debug('{}: {} seconds.'.format(func, e-s))
 		return res
 	return wrapped
 
@@ -46,8 +41,8 @@ def multiProcess(process_num, func, *args):
 	input_queue=multiprocessing.Queue()
 	output_queue=multiprocessing.Queue()
 
-	for i in range(len(args[0])):
-		input_queue.put((func, tuple([x[i] for x in args])))
+	for i in range(len(args[0])): 
+		input_queue.put((func, tuple([a[i] for a in args]))) # ith elements from all params of args
 
 	for i in range(process_num):
 		multiprocessing.Process(target=doWork, args=(input_queue, output_queue)).start()
@@ -68,11 +63,8 @@ def multiProcess(process_num, func, *args):
 def doWork(input, output):
 	while 1:
 		try :
-			logging.debug('Point 1');
 			func, args=input.get(timeout=3);
-			logging.debug('Point 2 {} {}'.format(args,*args))
 			res=func(*args)
-			logging.debug('Running the func.')
 			output.put(res)
 		except Exception as e:
 			logging.debug('{}'.format(e));

@@ -61,7 +61,6 @@ def multiProcess(process_num, func, *args):
 		if r!='Done':
 			# freq[r-min(args[0])]+=1; ###
 			res.append(r)
-			pass
 		else :
 			break
 	input_queue.close(); output_queue.close()

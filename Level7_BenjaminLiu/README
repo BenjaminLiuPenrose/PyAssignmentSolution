@@ -3,30 +3,38 @@ This is my solution to Final Project
 This can be found at https://github.com/BenjaminLiuPenrose/PyAssignmentSolution
 
 Overview of files structure
-Part1_Waterfall\Implementations\Assets\AssetBase.py class Asset
-Part1_Waterfall\Implementations\Assets\Car.py class Car, Civic, Lexus, Lamborghini
-Part1_Waterfall\Implementations\Assets\House.py class HouseBase, PrimaryHome, VacationHome
-Part1_Waterfall\Implementations\Loans\LoanBase.py class Loan, FixedRateLoan, VariableRateLoan
-Part1_Waterfall\Implementations\Loans\Mortgage.py class MortgageMixin, FixedMortgage, VariableMortgage
-Part1_Waterfall\Implementations\Loans\AutoLoan.py class AutoLoan
-Part1_Waterfall\Implementations\Loans\LoanPool.py class LoanPool
-Part1_Waterfall\Implementations\Tranches\TrancheBase.py class Tranche
-Part1_Waterfall\Implementations\Tranches\StandardTranche.py class StandardTranche
-Part1_Waterfall\Implementations\Tranches\StructuredSecurity.py class StructuredSecurity, function doWaterfall
-Part1_Waterfall\Implementations\Timer.py class Timer
-Part1_Waterfall\Implementations\Tools.py Timer, memoize, multiProcess
+Solution\Implementations\Assets\AssetBase.py class Asset
+Solution\Implementations\Assets\Car.py class Car, Civic, Lexus, Lamborghini
+Solution\Implementations\Assets\House.py class HouseBase, PrimaryHome, VacationHome
+Solution\Implementations\Loans\LoanBase.py class Loan, FixedRateLoan, VariableRateLoan
+Solution\Implementations\Loans\Mortgage.py class MortgageMixin, FixedMortgage, VariableMortgage
+Solution\Implementations\Loans\AutoLoan.py class AutoLoan
+Solution\Implementations\Loans\LoanPool.py class LoanPool
+Solution\Implementations\Tranches\TrancheBase.py class Tranche
+Solution\Implementations\Tranches\StandardTranche.py class StandardTranche
+Solution\Implementations\Tranches\StructuredSecurity.py class StructuredSecurity, and function doWaterfall, simulateWaterfall, simulateWaterfallParallel, runMonte, calculateYield, toLetterRating
+Solution\Implementations\Timer.py class Timer
+Solution\Implementations\Tools.py Timer, memoize
+Solution\Part1_Main.py -demo requirement with main function for part 1
+Solution\Part2_Main.py -demo requirement with main function for part 2
+Solution\Part3_Main.py -demo requirement with main function for part 3
 
-First, go to 6.1_Solution, 
-for Exercise 6.1.1, data is in the Excel file
-for Exercise 6.1.2 and 6.1.3, run 6.1_Main.py in shell, follow the instrcutions in shell step by step
-implementation code for this part can be found at the latter part of the code line
-implementation code for this part can be found at 6.1_Solution\Implementations\PlayerGame.py
+Open CaseStudy.pdf in my folder (with my side notes), you will see the hightlighted area in pdf I will implement in this program and I will use Part1.1 etc to refer to them
 
-Second, go to 6.2_Solution, 
-for Exercise 6.2.1, run 1.2_Main.py in shell, follow the instrcutions in shell step by step
-implementation code for this part can be found at the latter part of the code line
-implementation code for this part can be found at 6.1_Solution\Implementations\PlayerGame.py
+Go to folder Solution
+Firstly, for Part 1 
+run Part1_Main.py in shell, follow the instrcutions in shell step by step
+implementation code for this part can be found at Solution\Implementations\Tranches\*.py
 
-Debug suggested view can be found at Level1_BenjaminLiu\RecView.png
+Secondly, for Part 2 
+run Part2_Main.py in shell, follow the instrcutions in shell step by step
+implementation code for this part can be found at Solution\Implementations\Tranches\TrancheBase.py
+
+Lastly, for Part 3
+run Part3_Main.py in shell, follow the instrcutions in shell step by step
+implementation code for this part can be found at Solution\Implementations\Loans\LoanBase.py, LoanPool.py
+implementation code for this part can be found at Solution\Implementations\Tranches\StructuredSecurity.py
+
+Debug suggested view can be found at Level7_BenjaminLiu\RecView.png
 
 Enjoy!
