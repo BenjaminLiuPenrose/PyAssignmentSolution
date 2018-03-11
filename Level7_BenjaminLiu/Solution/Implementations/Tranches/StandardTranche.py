@@ -15,6 +15,7 @@ import copy, math
 import functools, itertools
 import numpy as np 
 from Implementations.Tranches.TrancheBase import *
+from Implementations.Tools import *
 logging.getLogger().setLevel(logging.DEBUG)
 
 '''===================================================================================================
@@ -29,6 +30,7 @@ class StandardTranche(Tranche):
 	def increaseTimePeriod(self):
 		self._currentPeriod+=1;
 
+	#@memoize
 	def makePrincipalPayment(self, principalPayment, principalDue, period):
 		while 1:
 			if self.notionalBalance()==0 and principalPayment!=0 :
@@ -40,7 +42,8 @@ class StandardTranche(Tranche):
 			self._principalShort.append(round(principalDue-principalPayment, 6));
 			self._principalHistory.append(round(principalPayment, 6));
 			break
-
+		return self
+	#@memoize
 	def makeInterestPayment(self, interestPayment, period):
 		while 1:
 			if self.interestDue()==0 and interestPayment!=0:
@@ -53,19 +56,22 @@ class StandardTranche(Tranche):
 			self._interestShort.append(round(self.interestDue()-interestPayment, 6));
 			self._interestHistory.append(round(interestPayment, 6));
 			break
-
+		return self
+	#memoize
 	def notionalBalance(self):
 		sumOfPrincipal=sum(self._principalHistory);
 		sumOfInterestShort=sum(self._interestShort);
 		return float(self._face)- sumOfPrincipal + sumOfInterestShort
-
+	#memoize
 	def interestDue(self):
 		return self.notionalBalance()*self._rate+self._interestShort[-1]
 
 	def reset(self):
+		self._currentPeriod=0;
 		self._principalHistory=[0];
 		self._interestHistory=[0];
 		self._principalShort=[0];
 		self._interestShort=[0];
-		self._currentPeriod=0;
+		self._interestDueHist=[0];
+		self._balance=[self._face];
 

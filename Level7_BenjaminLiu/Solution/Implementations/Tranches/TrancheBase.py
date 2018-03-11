@@ -12,6 +12,7 @@ import os, time, logging
 import copy, math
 import functools, itertools
 import numpy as np 
+from Implementations.Tools import *
 logging.getLogger().setLevel(logging.DEBUG)
 '''===================================================================================================
 File content:
@@ -90,16 +91,17 @@ class Tranche(object):
 	'''===================================================================================================
 	Implementation for Part2.4, 2.5 and 2.6
 	==================================================================================================='''
+	#@memoize
 	def IRR(self):
 		ls=[p+i for p, i in zip(self._principalHistory, self._interestHistory)];
 		ls[0]=-self._face;
-		logging.debug('Cash flow history (for IRR) for tranche with rate {} is {}'.format(self._rate, ls))
 		IRR=np.irr(ls); IRR*=12.0;
+		logging.info('Cash flow history (for IRR) for tranche with rate {} is {}'.format(self._rate*12.0, IRR))
 		return round(IRR, 10)
-
+	#@memoize
 	def DIRR(self):
 		return round(self._rate*12.0-self.IRR(), 10) # annual rate
-
+	#@memoize
 	def AL(self, balance):
 		if round(balance,2)!=0.0 :
 			return None 

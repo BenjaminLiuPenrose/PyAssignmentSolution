@@ -62,11 +62,11 @@ def main():
 	ans=raw_input('Sir, do you want to explore the optimal numProcess ? [y/n] \n');
 	try :
 		if ans.lower()=='y':
-			numProcess_list=[2+2*i for i in range(8)]; numProcess_list.insert(0, 1)
+			numProcess_list=[2+2*i for i in range(6)]; numProcess_list.insert(0, 1)
 			minimum=original=float("inf"); optimal_processes=1;
 			for numProcess in numProcess_list:
 				s=time.time(); 
-				_, ls=simulateWaterfallParallel(myLoanPool, myStructuredSecurity, NSIM=2000, numProcess=numProcess);
+				_, ls=simulateWaterfallParallel(myLoanPool, myStructuredSecurity, NSIM=200, numProcess=numProcess);
 				e=time.time();
 				if e-s<minimum and ls!=[]:
 					optimal_processes=numProcess; minimum=e-s;
@@ -77,15 +77,16 @@ def main():
 				.format(original, minimum, optimal_processes))
 			raw_input('Program pause. Press enter to continue.\n');
 		else :
-			optimal_processes=4;
+			optimal_processes=8;
 	except Exception as e:
 		logging.exception('Error Message: {}'.format(e));
 		logging.info('The optimal_processes will be set to 4.')
+	raw_input('Program pause. Press enter to continue.\n');
 
 
 	print('Running my runMonte function ... \n');
-	rate=runMonte(myLoanPool, myStructuredSecurity, NSIM=2000, tol=0.005);
-	# rate=runMonte(myLoanPool, myStructuredSecurity, NSIM=2000, tol=0.005, numProcess=optimal_processes);
+	rate=runMonte(myLoanPool, myStructuredSecurity, NSIM=5, tol=0.005);
+	#rate=runMonte(myLoanPool, myStructuredSecurity, NSIM=2000, tol=0.005, numProcess=optimal_processes);
 	myStructuredSecurity=StructuredSecurity(myLoanPool.ttlPrincipal(), 'Sequencial');
 	myStructuredSecurity.addTranche(0.8, rate[0], 'A');
 	myStructuredSecurity.addTranche(0.2, rate[1], 'B');

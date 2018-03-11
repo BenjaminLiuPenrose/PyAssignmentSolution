@@ -78,6 +78,7 @@ class StructuredSecurity(object):
 			t.increaseTimePeriod();
 		self._currentPeriod+=1;
 
+	@memoize
 	def makePayments(self, cashAmount, principalReceived):
 		availableFunds=cashAmount+self._reserveAccount;
 		availablePrincipals=principalReceived;
@@ -112,8 +113,10 @@ class StructuredSecurity(object):
 
 		if availableFunds >0 :
 			self._reserveAccount+=availableFunds;	
+		return self
 
 	# it returns list of lists and each list is of form [Interest Due, Interest Paid, Interest Shortfall, Principal Paid, Balance]
+	#@memoize
 	def getWaterfall(self):
 		waterfall=[];
 		sorted_tranches=sorted(self._tranches, key=lambda t: t.subordination)
@@ -126,11 +129,17 @@ class StructuredSecurity(object):
 			waterfall.append(ls);
 		return waterfall
 
+	def reset(self):
+		for t in self._tranches:
+			t.reset();
+		self._reserveAccount=0;
+		self._currentPeriod=0;	
+
 '''===================================================================================================
 Implementation for Part1.4, 3.5
 ==================================================================================================='''
 def doWaterfall(loanPool, structuredSecurity):
-	waterfall_s=[]; waterfall_l=[]; reserveAccount_s=[]
+	waterfall_s=[]; waterfall_l=[]; reserveAccount_s=[]; structuredSecurity.reset(); loanPool.reset();
 	while loanPool.activeLoan(structuredSecurity.currentPeriod)!=0 :
 		logging.debug('The remaining number of active loans is {}'.format(loanPool.activeLoan(structuredSecurity.currentPeriod)))
 		structuredSecurity.increaseTimePeriod();
@@ -138,7 +147,7 @@ def doWaterfall(loanPool, structuredSecurity):
 		totalPayment=loanPool.ttlPaymentDue(structuredSecurity.currentPeriod); 
 		principalReceived=loanPool.ttlPrincipalDue(structuredSecurity.currentPeriod);
 		totalPayment+=recoveryValue;
-		structuredSecurity.makePayments(totalPayment, principalReceived);
+		structuredSecurity=structuredSecurity.makePayments(totalPayment, principalReceived);
 		waterfall_s.append(structuredSecurity.getWaterfall()); 
 		waterfall_l.append(loanPool.getWaterfall(structuredSecurity.currentPeriod)); 
 		reserveAccount_s.append(structuredSecurity.reserveAccount)
@@ -149,6 +158,7 @@ def doWaterfall(loanPool, structuredSecurity):
 		IRR_s.append(t.IRR());
 		DIRR_s.append(t.DIRR());
 		AL_s.append(t.AL(balance_to_al));
+	logging.debug('doWaterfall: The DIRR is {} and the AL is {}'.format(DIRR_s, AL_s))
 	return waterfall_s, waterfall_l, reserveAccount_s, IRR_s, DIRR_s, AL_s
 
 '''===================================================================================================
@@ -158,7 +168,7 @@ Implementation for Part3 MC1
 def simulateWaterfall(loanPool, structuredSecurity, NSIM):
 	DIRR=[]; AL=[];
 	for i in range(NSIM):
-		logging.debug('Running doWaterfall {} time'.format(i+1))
+		logging.info('Running doWaterfall {} time'.format(i+1))
 		_, _, _, _, dirr, al=doWaterfall(loanPool, structuredSecurity);
 		DIRR.append(dirr); AL.append(al);
 	DIRR_avg=[]; AL_avg=[];
@@ -167,6 +177,7 @@ def simulateWaterfall(loanPool, structuredSecurity, NSIM):
 		al=[x[i] for x in AL if x[i]!=None];
 		DIRR_avg.append(sum(dirr)/float(len(dirr)));
 		AL_avg.append(sum(al)/float(len(al)) if len(al)!=0 else None); 
+	logging.info('simulateWaterfall: The DIRR is {} and the AL is {}'.format(DIRR_avg, AL_avg))
 	return DIRR_avg, AL_avg
 
 '''===================================================================================================
@@ -240,13 +251,13 @@ def runMonte(loanPool, structuredSecurity, NSIM=2000, tol=0.005, numProcess=None
 			newRate=oldRate+coeff*(Yield[idx]-oldRate);
 			t.rate=newRate; 
 			chg=abs(oldRate-newRate)/oldRate;
-			logging.debug('The oldRate is {}, the newRate is {}, the Yield is {}, the chg is {}'.format(oldRate, newRate, Yield[idx], chg))
+			logging.info('The oldRate is {}, the newRate is {}, the Yield is {}, the chg is {}'.format(oldRate, newRate, Yield[idx], chg))
 			percentChg.append(chg);
 		notional=[t.face for t in structuredSecurity.tranches]
 		ttlNotional=float(sum(notional));
 		diff=reduce(lambda total, (notional, percentChg): total+(notional*percentChg), zip(notional, percentChg), 0)
 		diff=diff/ttlNotional;
-		logging.debug('runMonte: The diff is {} and the new rate is {}'.format(diff, [t.rate for t in structuredSecurity.tranches]))
+		logging.info('runMonte: The diff is {} and the new rate is {}'.format(diff, [t.rate for t in structuredSecurity.tranches]))
 		if diff < tol:
 			rate=[t.rate*12.0 for t in structuredSecurity.tranches]
 			break
@@ -254,12 +265,12 @@ def runMonte(loanPool, structuredSecurity, NSIM=2000, tol=0.005, numProcess=None
 
 
 def calculateYield(DIRR, AL):
-	logging.debug('calculateYield: The DIRR is {} and the AL is {}'.format(DIRR, AL))
 	if AL==None:
 		return 0
 	r=7/(1+0.08*exp(-0.19/12.0*AL));
 	r+=0.019*sqrt(AL/12.0*DIRR*100);
 	r=r/100.0;
+	logging.info('calculateYield: The DIRR is {}, the AL is {} and the yield is {}'.format(DIRR, AL, r))
 	return r
 
 '''===================================================================================================

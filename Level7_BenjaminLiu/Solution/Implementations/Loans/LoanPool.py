@@ -13,6 +13,7 @@ import copy, math
 import functools, itertools
 import numpy as np 
 from Implementations.Loans.LoanBase import *
+from Implementations.Tools import *
 logging.getLogger().setLevel(logging.DEBUG)
 
 '''===================================================================================================
@@ -39,9 +40,11 @@ class LoanPool(object):
 	@property
 	def loans(self):
 		return self._loans
-
+	
+	@memoize
 	def ttlPrincipal(self):
 		return sum(i.face for i in self._loans)
+	@memoize
 	def ttlBalance(self, period):
 		return sum(i.balanceRecur(period) for i in self._loans)
 	def ttlPrincipalDue(self, period):
@@ -101,3 +104,7 @@ class LoanPool(object):
 		for l in self._loans:
 			recoveryValue+=l.checkDefault(default[cnt], period); cnt+=1;
 		return recoveryValue
+
+	def reset(self):
+		for l in self._loans:
+			l.mode='normal';
