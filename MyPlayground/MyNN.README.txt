@@ -1,0 +1,144 @@
+Implementations/initialize_parameters_zeros.py
+Implementations/initialize_parameters_random.py
+Implementations/initialize_parameters_he.py
+'
+input: 
+layer_dims, 
+output:
+parameters{},
+'
+
+Implementations/linear_forward.py
+'
+input:
+A,
+W,b,
+output:
+Z,
+cache=(A,W,b),
+'
+Implementations/linear_activation_forward.py #with dropout
+'
+input:
+A_prev, 
+W, b, 
+activation,
+output:
+A, 
+cache,
+'
+Implementations/L_model_forward.py
+'
+input:
+X,
+parameters,
+output:
+AL,
+caches[cache]
+'
+Implementations/compute_cost.py 
+'
+input:
+AL,
+Y,
+output:
+cost,
+'
+Implementations/compute_cost_with_regularization
+'
+input:
+AL,
+Y,
+parameters, lambd,
+output:
+cost,
+'
+Implementations/linear_backward.py
+'
+input:
+dZ,
+cache,
+output:
+dA_prev,
+dW, db,
+'
+Implementations/linear_backward_with_regularization.py 
+'
+Input:
+dZ,
+cache, 
+lambd,
+Output:
+'
+Implementations/linear_activation_backward.py #with dropout
+'
+input:
+dA, 
+cache, 
+activation='relu'
+output:
+dA_prev,
+dW, db,
+'
+Implementations/L_model_backward.py
+'
+input:
+AL,
+Y, 
+caches,
+output:
+grads{},
+'
+Implementations/update_parameters.py
+'
+input:
+parameters, 
+grads, 
+learning_rate,
+output:
+parameters,
+'
+Implementations/random_mini_batch.py
+'
+input:
+X, 
+Y, 
+mini_batch_size = 64, 
+seed = 0
+output:
+mini_batches
+'
+Implementations/update_parameters_with_momentum.py (parameters, grads, v, beta, learning_rate)
+Implementations/update_parameters_with_adam.py (parameters, grads, v, s, t, learning_rate = 0.01,
+                                beta1 = 0.9, beta2 = 0.999,  epsilon = 1e-8)
+===================================================================================================
+L_layer_model.py
+'
+input:
+X, 
+Y, 
+layers_dims, 
+initialization = "he"
+learning_rate = 0.0075, 
+num_iterations = 3000, 
+print_cost=False,
+output:
+parameters
+for i in num_iterations:
+	AL, caches=L_model_forward(X, parameters)
+	compute_cost(AL, Y)
+	grads=L_model_backward(AL, Y, caches)
+	parameters=update_parameters(parameters, grads, learning_rate)
+'
+====================================================================================================
+Implementations/gradient_check_n.py
+'
+input:
+parameters, 
+gradients, 
+X, 
+Y, 
+epsilon = 1e-7,
+output:
+difference,
+'
