@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 #!/usr/bin/env python
 '''
 Student name: Beier (Benjamin) Liu
@@ -10,7 +10,7 @@ Python 2.7 is recommended
 import os, time, logging
 import copy, math
 import functools, itertools
-import numpy as np 
+import numpy as np
 import multiprocessing
 logging.getLogger().setLevel(logging.INFO)
 '''===================================================================================================
@@ -31,17 +31,17 @@ def memoize(func):
     memo = {}
     @functools.wraps(func)
     def wrapped(*args):
-        if args not in memo:            
+        if args not in memo:
             memo[args] = func(*args)
         return memo[args]
-    return wrapped 
+    return wrapped
 
 @Timer
 def multiProcess(process_num, func, *args):
 	input_queue=multiprocessing.Queue()
 	output_queue=multiprocessing.Queue()
 
-	for i in range(len(args[0])): 
+	for i in range(len(args[0])):
 		input_queue.put((func, tuple([a[i] for a in args]))) # ith elements from all params of args
 
 	for i in range(process_num):
@@ -58,7 +58,7 @@ def multiProcess(process_num, func, *args):
 		else :
 			break
 	input_queue.close(); output_queue.close()
-	return res#, freq 
+	return res
 
 def doWork(input, output):
 	while 1:
@@ -67,6 +67,6 @@ def doWork(input, output):
 			res=func(*args)
 			output.put(res)
 		except Exception as e:
-			logging.debug('{}'.format(e));
+			logging.error('{}'.format(e));
 			output.put('Done')
 			break
